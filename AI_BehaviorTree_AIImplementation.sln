@@ -1,17 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.6.33815.320
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AI_BehaviorTree_AIImplementation", "AI_BehaviorTree_AIImplementation.csproj", "{B8AB6DF7-A5F6-408B-A1CC-85F7CC22B68A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectK", "ProjectK\ProjectK.csproj", "{AA51D845-FE5E-461C-A32E-3380C4B53020}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectK", "ProjectK\ProjectK.csproj", "{AA51D845-FE5E-461C-A32E-3380C4B53020}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjetR", "ProjetR\ProjetR.csproj", "{C23D4F48-5EAD-4663-81D2-0C418C4C5664}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjetR", "ProjetR\ProjetR.csproj", "{C23D4F48-5EAD-4663-81D2-0C418C4C5664}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjetD", "ProjetD\ProjetD.csproj", "{A8A54C81-9032-4B4F-901C-FF435C1C92FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjetD", "ProjetD\ProjetD.csproj", "{A8A54C81-9032-4B4F-901C-FF435C1C92FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjetCommun", "ProjetCommun\ProjetCommun.csproj", "{666D1B7B-0DAA-49F5-B6A2-729AE6871FFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjetCommun", "ProjetCommun\ProjetCommun.csproj", "{666D1B7B-0DAA-49F5-B6A2-729AE6871FFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjetMarc", "ProjetMarc\ProjetMarc.csproj", "{A43F2598-3A37-4712-9C82-F43476CD3F4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -127,6 +129,26 @@ Global
 		{666D1B7B-0DAA-49F5-B6A2-729AE6871FFD}.Release|x64.Build.0 = Release|Any CPU
 		{666D1B7B-0DAA-49F5-B6A2-729AE6871FFD}.Release|x86.ActiveCfg = Release|Any CPU
 		{666D1B7B-0DAA-49F5-B6A2-729AE6871FFD}.Release|x86.Build.0 = Release|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Debug|ARM.Build.0 = Debug|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Debug|x64.Build.0 = Debug|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Debug|x86.Build.0 = Debug|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Release|ARM.ActiveCfg = Release|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Release|ARM.Build.0 = Release|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Release|ARM64.Build.0 = Release|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Release|x64.ActiveCfg = Release|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Release|x64.Build.0 = Release|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Release|x86.ActiveCfg = Release|Any CPU
+		{A43F2598-3A37-4712-9C82-F43476CD3F4A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
