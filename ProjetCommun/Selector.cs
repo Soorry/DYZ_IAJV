@@ -9,10 +9,20 @@ namespace ProjetCommun
     internal class Selector : INoeud
     {
         List<INoeud> noeuds = new List<INoeud>();
+        public etatNoeud etat = etatNoeud.NotExecuted;
 
-        bool Execute()
+        public etatNoeud Execute()
         {
-            return true;
+            foreach (var o in noeuds)
+            {
+                if (o.Execute()==etatNoeud.Sucess)
+                {
+                    etat = etatNoeud.Sucess;
+                    return etat;
+                }
+            }
+            etat = etatNoeud.Fail;
+            return etat;
         }
 
     }

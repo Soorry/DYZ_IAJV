@@ -1,7 +1,15 @@
 ﻿namespace ProjetCommun
 {
-    public class Noeud
+    public interface INoeud
     {
         // tu es générique
+        etatNoeud Execute();
+    }
+    public enum etatNoeud
+    {
+        Fail,
+        Sucess,
+        Running,
+        NotExecuted,
     }
 }

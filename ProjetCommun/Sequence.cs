@@ -9,9 +9,20 @@ namespace ProjetCommun
     internal class Sequence : INoeud
     {
         List<INoeud> noeuds = new List<INoeud>();
-        public bool Execute()
+        public etatNoeud etat = etatNoeud.NotExecuted;
+
+
+        public etatNoeud Execute()
         {
-            return true;
+            foreach (var o in noeuds)
+            {
+                etat = o.Execute();
+                if (etat == etatNoeud.Fail)
+                {
+                    return etat;
+                }
+            }
+            return etat;
         }
     }
 }
