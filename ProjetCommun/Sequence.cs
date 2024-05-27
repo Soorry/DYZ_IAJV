@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AI_BehaviorTree_AIGameUtility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,14 +10,17 @@ namespace ProjetCommun
     internal class Sequence : INoeud
     {
         List<INoeud> noeuds = new List<INoeud>();
-        public etatNoeud etat = etatNoeud.NotExecuted;
+        List<AIAction> actions = new List<AIAction>();
+        etatNoeud etat = etatNoeud.NotExecuted;
 
+        List<AIAction> INoeud.actions { get => actions; set => actions = value; }
 
-        public etatNoeud Execute()
+        public etatNoeud Execute(object o)
         {
-            foreach (var o in noeuds)
+            foreach (var n in noeuds)
             {
-                etat = o.Execute();
+                etat = n.Execute(o);
+                actions.AddRange(n.actions);
                 if (etat == etatNoeud.Fail)
                 {
                     return etat;

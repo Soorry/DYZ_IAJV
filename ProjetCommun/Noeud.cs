@@ -1,9 +1,11 @@
-﻿namespace ProjetCommun
+﻿using AI_BehaviorTree_AIGameUtility;
+
+namespace ProjetCommun
 {
     public interface INoeud
     {
-        // tu es générique
-        etatNoeud Execute();
+        List<AIAction> actions { get; set; }
+        etatNoeud Execute(Object param);
     }
     public enum etatNoeud
     {
