@@ -21,7 +21,7 @@ namespace ProjetCommun
         }
     }
 
-    class NoeudsDash : INoeud
+    public class NoeudsDash : INoeud
     {
         public List<AIAction> actions { get => actions; set => actions = value; }
 
@@ -29,7 +29,7 @@ namespace ProjetCommun
         {
             if(param != null && param.GetType() == typeof(UnityEngine.Vector3))
             {
-                actions.Add(new AIActionDash((UnityEngine.Vector3)param));
+                actions.Add(new AIActionDash(new UnityEngine.Vector3(0,0,10)));
                 return etatNoeud.Sucess;
             }
             return etatNoeud.Fail;

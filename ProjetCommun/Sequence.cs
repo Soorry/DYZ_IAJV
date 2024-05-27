@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProjetCommun
 {
-    internal class Sequence : INoeud
+    public class Sequence : INoeud
     {
         List<INoeud> noeuds = new List<INoeud>();
         List<AIAction> actions = new List<AIAction>();
