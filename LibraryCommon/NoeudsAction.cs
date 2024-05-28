@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 
-namespace ProjetCommun
+namespace LibraryCommon
 {
-    class NoeudsFire : INoeud
+    public class NoeudsFire : INoeud
     {
         public List<AIAction> actions { get => actions; set => actions = value; }
 
@@ -36,7 +36,7 @@ namespace ProjetCommun
         }
     }
 
-    class NoeudsLookAt : INoeud
+    public class NoeudsLookAt : INoeud
     {
         public List<AIAction> actions { get => actions; set => actions = value; }
 
@@ -51,7 +51,7 @@ namespace ProjetCommun
         }
     }
 
-    class NoeudsMoveTo : INoeud
+    public class NoeudsMoveTo : INoeud
     {
         public List<AIAction> actions { get => actions; set => actions = value; }
 
@@ -66,7 +66,7 @@ namespace ProjetCommun
         }
     }
 
-    class NoeudsStop : INoeud
+    public class NoeudsStop : INoeud
     {
         public List<AIAction> actions { get => actions; set => actions = value; }
 
