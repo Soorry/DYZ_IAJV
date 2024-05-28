@@ -1,12 +1,11 @@
 ﻿using AI_BehaviorTree_AIGameUtility;
 using System.Collections.Generic;
 
-namespace ProjetCommun
+namespace LibraryCommon
 {
     public interface INoeud
     {
-        List<AIAction> actions { get; set; }
-        etatNoeud Execute(object param);
+        etatNoeud Execute(object param,List<AIAction> aIActions);
     }
     public enum etatNoeud
     {

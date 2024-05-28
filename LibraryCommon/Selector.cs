@@ -6,26 +6,25 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace ProjetCommun
+namespace LibraryCommon
 {
     public class Selector : INoeud
     {
-        public List<INoeud> noeuds = new List<INoeud>();
-        public etatNoeud etat = etatNoeud.NotExecuted;
+        public List<INoeud> noeuds { get; set; }
+        public etatNoeud etat { get; set; }
 
-        public List<AIAction> actions { get => actions; set => actions = value; }
 
         public Selector()
         {
-            actions = new List<AIAction>();
+            noeuds = new List<INoeud>();
+            etat = etatNoeud.NotExecuted;
         }
 
-        public etatNoeud Execute(object o)
+        public etatNoeud Execute(object o, List<AIAction> aIActions)
         {
             foreach (var n in noeuds)
             {
-                etat = n.Execute(o);
-                actions.AddRange(n.actions);
+                etat = n.Execute(o, aIActions);
                 if (etat == etatNoeud.Sucess)
                 {
                     return etat;

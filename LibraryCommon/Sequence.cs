@@ -5,22 +5,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjetCommun
+namespace LibraryCommon
 {
     public class Sequence : INoeud
     {
         List<INoeud> noeuds = new List<INoeud>();
-        List<AIAction> actions = new List<AIAction>();
         etatNoeud etat = etatNoeud.NotExecuted;
 
-        List<AIAction> INoeud.actions { get => actions; set => actions = value; }
+        public Sequence()
+        {
+            noeuds = new List<INoeud>();
+        }
 
-        public etatNoeud Execute(object o)
+
+        public etatNoeud Execute(object o, List<AIAction> aIActions)
         {
             foreach (var n in noeuds)
             {
-                etat = n.Execute(o);
-                actions.AddRange(n.actions);
+                etat = n.Execute(o, aIActions);
                 if (etat == etatNoeud.Fail)
                 {
                     return etat;

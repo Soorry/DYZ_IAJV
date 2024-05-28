@@ -1,9 +1,10 @@
 ﻿using AI_BehaviorTree_AIGameUtility;
-using ProjetCommun;
+using LibraryCommon;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
+
 
 namespace AI_BehaviorTree_AIImplementation
 {
@@ -35,7 +36,8 @@ namespace AI_BehaviorTree_AIImplementation
             PlayerInformations myPlayerInfos = GetPlayerInfos(AIId, playerInfos);
 
             Selector start = new Selector();
-            //start.noeuds.Add(new NoeudsFire());
+            start.noeuds.Add(new NoeudsFire());
+            start.Execute(null,actionList);
             return actionList;
         }
 

@@ -10,13 +10,12 @@ using LibraryCommon;
 
 namespace LibraryZHENGDenis
 {
-    class NoeudsFire : INoeud
+    public class NoeudsFire : INoeud
     {
-        public List<AIAction> actions { get => actions; set => actions = value; }
-
-        public etatNoeud Execute(object param)
+        public etatNoeud Execute(object param, List<AIAction> aIActions)
         {
-            actions.Add(new AIActionFire());
+            
+            aIActions.Add(new AIActionFire());
             return etatNoeud.Sucess;
         }
     }

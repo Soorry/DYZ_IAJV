@@ -12,24 +12,24 @@ namespace LibraryCommon
 {
     public class NoeudsFire : INoeud
     {
-        public List<AIAction> actions { get => actions; set => actions = value; }
-
-        public etatNoeud Execute(object param)
+       
+        public etatNoeud Execute(object param, List<AIAction> aIActions)
         {
-            actions.Add(new AIActionFire());
+
+            aIActions.Add(new AIActionFire());
             return etatNoeud.Sucess;
         }
     }
 
     public class NoeudsDash : INoeud
     {
-        public List<AIAction> actions { get => actions; set => actions = value; }
 
-        public etatNoeud Execute(object param)
+
+        public etatNoeud Execute(object param, List<AIAction> aIActions)
         {
             if(param != null && param.GetType() == typeof(UnityEngine.Vector3))
             {
-                actions.Add(new AIActionDash(new UnityEngine.Vector3(0,0,10)));
+                aIActions.Add(new AIActionDash(new UnityEngine.Vector3(0,0,10)));
                 return etatNoeud.Sucess;
             }
             return etatNoeud.Fail;
@@ -38,13 +38,13 @@ namespace LibraryCommon
 
     public class NoeudsLookAt : INoeud
     {
-        public List<AIAction> actions { get => actions; set => actions = value; }
+       
 
-        public etatNoeud Execute(object param)
+        public etatNoeud Execute(object param, List<AIAction> aIActions)
         {
             if (param != null && param.GetType() == typeof(UnityEngine.Vector3))
             {
-                actions.Add(new AIActionLookAtPosition((UnityEngine.Vector3)param));
+                aIActions.Add(new AIActionLookAtPosition((UnityEngine.Vector3)param));
                 return etatNoeud.Sucess;
             }
             return etatNoeud.Fail;
@@ -53,13 +53,12 @@ namespace LibraryCommon
 
     public class NoeudsMoveTo : INoeud
     {
-        public List<AIAction> actions { get => actions; set => actions = value; }
-
-        public etatNoeud Execute(object param)
+ 
+        public etatNoeud Execute(object param, List<AIAction> aIActions)
         {
             if (param != null && param.GetType() == typeof(UnityEngine.Vector3))
             {
-                actions.Add(new AIActionMoveToDestination((UnityEngine.Vector3)param));
+                aIActions.Add(new AIActionMoveToDestination((UnityEngine.Vector3)param));
                 return etatNoeud.Sucess;
             }
             return etatNoeud.Fail;
@@ -68,11 +67,10 @@ namespace LibraryCommon
 
     public class NoeudsStop : INoeud
     {
-        public List<AIAction> actions { get => actions; set => actions = value; }
-
-        public etatNoeud Execute(object param)
+      
+        public etatNoeud Execute(object param, List<AIAction> aIActions)
         {
-            actions.Add(new AIActionStopMovement());
+            aIActions.Add(new AIActionStopMovement());
             return etatNoeud.Sucess;
         }
     }
