@@ -11,7 +11,7 @@ namespace LibraryCommon
     public class NoeudsFire : INoeud
     {
 
-        EtatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
+        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
         {
 
             aIActions.Add(new AIActionFire());
@@ -21,7 +21,7 @@ namespace LibraryCommon
 
     public class NoeudsDash : INoeud
     {
-        EtatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
+        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
         {
             aIActions.Add(new AIActionDash(position));
             return EtatNoeud.Success;
@@ -30,7 +30,7 @@ namespace LibraryCommon
 
     public class NoeudsLookAt : INoeud
     {
-        EtatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
+        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
         {
             aIActions.Add(new AIActionLookAtPosition(position));
             return EtatNoeud.Success;
@@ -40,7 +40,7 @@ namespace LibraryCommon
     public class NoeudsMoveTo : INoeud
     {
 
-        EtatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
+        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
         {
             aIActions.Add(new AIActionMoveToDestination(position));
             return EtatNoeud.Success;
@@ -49,7 +49,7 @@ namespace LibraryCommon
 
     public class NoeudsStop : INoeud
     {
-        EtatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
+        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
         {
             aIActions.Add(new AIActionStopMovement());
             return EtatNoeud.Success;

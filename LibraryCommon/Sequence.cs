@@ -15,7 +15,7 @@ namespace LibraryCommon
         }
 
 
-        EtatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
+        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
         {
             foreach (var n in noeuds)
             {
