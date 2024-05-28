@@ -38,24 +38,25 @@ namespace AI_BehaviorTree_AIImplementation
             Selector start = new Selector();
 
             Sequence dodgeSequence = new Sequence();
-            dodgeSequence.noeuds.Add(new NoeudsDashIfProjectileClose(10.0f, 10.0f));
+            dodgeSequence.noeuds.Add(new NoeudsDashIfProjectileClose(1.0f, 1000.0f));
 
             Sequence moveToBonusSequence = new Sequence();
             //moveToBonusSequence.noeuds.Add(new NoeudsLookAtClosestEnemy());
-            moveToBonusSequence.noeuds.Add(new NoeudsAnticipateAndLookAtEnemy());
+            moveToBonusSequence.noeuds.Add(new NoeudsAnticipateAndLookAtEnemy(0.005f));
             moveToBonusSequence.noeuds.Add(new NoeudsFire());
             moveToBonusSequence.noeuds.Add(new NoeudsMoveToBonus());
 
             Sequence moveToEnemySequence = new Sequence();
             //moveToEnemySequence.noeuds.Add(new NoeudsLookAtClosestEnemy());
-            moveToEnemySequence.noeuds.Add(new NoeudsAnticipateAndLookAtEnemy());
+            moveToEnemySequence.noeuds.Add(new NoeudsAnticipateAndLookAtEnemy(0.005f));
             moveToBonusSequence.noeuds.Add(new NoeudsFire());
-            moveToEnemySequence.noeuds.Add(new NoeudsCheckDistance(10.0f, false));
+            //moveToEnemySequence.noeuds.Add(new NoeudsCheckDistance(10.0f, false));
             moveToEnemySequence.noeuds.Add(new NoeudsMoveToClosestEnemy());
 
             Sequence defaultSequence = new Sequence();
             defaultSequence.noeuds.Add(new NoeudsStop());
-
+            
+            start.noeuds.Add(dodgeSequence);
             start.noeuds.Add(moveToBonusSequence);
             start.noeuds.Add(moveToEnemySequence);
             start.noeuds.Add(defaultSequence);

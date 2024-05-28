@@ -8,6 +8,13 @@ namespace LibraryMarcBourgeois
 
     public class NoeudsAnticipateAndLookAtEnemy : INoeud
     {
+        private float anticipationFactor = 0.005f; //
+
+        public NoeudsAnticipateAndLookAtEnemy(float f)
+        {
+            anticipationFactor = f;
+        }
+
         EtatNoeud INoeud.Execute(ref BehaviourTree bTree)
         {
             List<PlayerInformations> playerInfos = bTree.gameWorld.GetPlayerInfosList();
@@ -46,7 +53,7 @@ namespace LibraryMarcBourgeois
                     Vector3 previousPosition = previousClosestEnemy.Transform.Position;
                     Vector3 currentPosition = closestEnemy.Transform.Position;
                     Vector3 direction = (currentPosition - previousPosition).normalized;
-                    Vector3 anticipatedPosition = currentPosition + direction * Vector3.Distance(currentPosition, bTree.myPlayerInfos.Transform.Position) * 0.005f;
+                    Vector3 anticipatedPosition = currentPosition + direction * Vector3.Distance(currentPosition, bTree.myPlayerInfos.Transform.Position) * anticipationFactor;
 
                     bTree.actions.Add(new AIActionLookAtPosition(anticipatedPosition));
                     return EtatNoeud.Success;
@@ -275,8 +282,8 @@ namespace LibraryMarcBourgeois
                     dashDirection = (closestBonus.Position - aiPosition).normalized;
                 }
 
-                Vector3 dashPosition = aiPosition + dashDirection * _dashDistance;
-                bTree.actions.Add(new AIActionDash(dashPosition));
+                //Vector3 dashPosition = aiPosition + dashDirection * _dashDistance;
+                bTree.actions.Add(new AIActionDash(dashDirection * _dashDistance));
                 return EtatNoeud.Success;
             }
 
