@@ -20,12 +20,12 @@ namespace LibraryCommon
             etat = EtatNoeud.NotExecuted;
         }
 
-        etatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
+        EtatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
         {
             foreach (var n in noeuds)
             {
                 etat = n.Execute(ref gameWorld, aIActions, position);
-                if (etat == etatNoeud.Sucess)
+                if (etat == EtatNoeud.Success)
                 {
                     return etat;
                 }
