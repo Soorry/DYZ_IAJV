@@ -11,28 +11,28 @@ namespace LibraryCommon
     public class NoeudsFire : INoeud
     {
 
-        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, object info)
+        public EtatNoeud Execute(ref BehaviourTree bTree)
         {
 
-            aIActions.Add(new AIActionFire());
+            bTree.actions.Add(new AIActionFire());
             return EtatNoeud.Success;
         }
     }
 
     public class NoeudsDash : INoeud
     {
-        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, object info)
+        public EtatNoeud Execute(ref BehaviourTree bTree)
         {
-            aIActions.Add(new AIActionDash((Vector3)info));
+            bTree.actions.Add(new AIActionDash(bTree.position));
             return EtatNoeud.Success;
         }
     }
 
     public class NoeudsLookAt : INoeud
     {
-        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, object info)
+        public EtatNoeud Execute(ref BehaviourTree bTree)
         {
-            aIActions.Add(new AIActionLookAtPosition((Vector3)info));
+            bTree.actions.Add(new AIActionLookAtPosition(bTree.position));
             return EtatNoeud.Success;
         }
     }
@@ -40,18 +40,18 @@ namespace LibraryCommon
     public class NoeudsMoveTo : INoeud
     {
 
-        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, object info)
+        public EtatNoeud Execute(ref BehaviourTree bTree)
         {
-            aIActions.Add(new AIActionMoveToDestination((Vector3)info));
+            bTree.actions.Add(new AIActionMoveToDestination(bTree.position));
             return EtatNoeud.Success;
         }
     }
 
     public class NoeudsStop : INoeud
     {
-        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, object info)
+        public EtatNoeud Execute(ref BehaviourTree bTree)
         {
-            aIActions.Add(new AIActionStopMovement());
+            bTree.actions.Add(new AIActionStopMovement());
             return EtatNoeud.Success;
         }
     }

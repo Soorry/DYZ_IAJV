@@ -1,15 +1,13 @@
-﻿using AI_BehaviorTree_AIGameUtility;
-using LibraryCommon;
-using LibraryRemiDugenet;
+﻿/*
+using AI_BehaviorTree_AIGameUtility;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-
-namespace AI_BehaviorTree_AIImplementation
+namespace ProjectK
 {
-    public class AIDecisionMaker
+    public class AIDecisionK
     {
 
         /// <summary>
@@ -19,29 +17,12 @@ namespace AI_BehaviorTree_AIImplementation
         /// </summary>
         private int AIId = -1;
         public GameWorldUtils AIGameWorldUtils = new GameWorldUtils();
-        public BehaviourTree behaviourTree;
-
-        public AIDecisionMaker()
-        {
-            Selector start = new Selector();
-            Sequence seq = new Sequence();
-            MoveToPlayer move = new MoveToPlayer();
-            LookAtPlayer lookAt = new LookAtPlayer();
-            Fire fire = new Fire();
-            seq.noeuds.Add(move);
-            seq.noeuds.Add(lookAt);
-            seq.noeuds.Add(fire);
-            start.noeuds.Add(seq);
-            behaviourTree = new BehaviourTree(start, AIGameWorldUtils);
-        }
 
         // Ne pas utiliser cette fonction, elle n'est utile que pour le jeu qui vous Set votre Id, si vous voulez votre Id utilisez AIId
         public void SetAIId(int parAIId) { AIId = parAIId; }
 
         // Vous pouvez modifier le contenu de cette fonction pour modifier votre nom en jeu
-        public string GetName() { return "bot_bozo 2"; }
-
-        public void OnMyAIDeath() { }
+        public string GetName() { return "MyAIName"; }
 
         public void SetAIGameWorldUtils(GameWorldUtils parGameWorldUtils) { AIGameWorldUtils = parGameWorldUtils; }
 
@@ -49,14 +30,42 @@ namespace AI_BehaviorTree_AIImplementation
 
         public List<AIAction> ComputeAIDecision()
         {
+            List<AIAction> actionList = new List<AIAction>();
             List<PlayerInformations> playerInfos = AIGameWorldUtils.GetPlayerInfosList();
             PlayerInformations myPlayerInfos = GetPlayerInfos(AIId, playerInfos);
 
-            behaviourTree.actions.Clear();
-            behaviourTree.gameWorld = AIGameWorldUtils;
-            behaviourTree.start.Execute(ref behaviourTree);
-            Debug.Log("count actions : " + behaviourTree.actions.Count);
-            return behaviourTree.actions;
+            PlayerInformations target = null;
+            foreach (PlayerInformations playerInfo in playerInfos)
+            {
+                if (!playerInfo.IsActive)
+                    continue;
+
+                if (playerInfo.PlayerId == myPlayerInfos.PlayerId)
+                    continue;
+
+                target = playerInfo;
+                break;
+            }
+
+            if (target == null)
+                return actionList;
+
+            actionList.Add(new AIActionLookAtPosition(target.Transform.Position));
+
+            if (Vector3.Distance(myPlayerInfos.Transform.Position, target.Transform.Position) > 10.0f)
+                actionList.Add(new AIActionMoveToDestination(target.Transform.Position));
+            else
+                actionList.Add(new AIActionStopMovement());
+
+            RaycastHit hit;
+            Vector3 direction = myPlayerInfos.Transform.Rotation * Vector3.forward;
+            if (Physics.Raycast(myPlayerInfos.Transform.Position, direction.normalized, out hit, 100.0f))
+            {
+                if (AIGameWorldUtils.PlayerLayerMask == (AIGameWorldUtils.PlayerLayerMask | (1 << hit.collider.gameObject.layer)))
+                    actionList.Add(new AIActionFire());
+            }
+
+            return actionList;
         }
 
         public PlayerInformations GetPlayerInfos(int parPlayerId, List<PlayerInformations> parPlayerInfosList)
@@ -72,3 +81,4 @@ namespace AI_BehaviorTree_AIImplementation
         }
     }
 }
+*/

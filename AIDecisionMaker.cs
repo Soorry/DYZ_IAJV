@@ -1,4 +1,5 @@
-﻿using AI_BehaviorTree_AIGameUtility;
+﻿/*
+using AI_BehaviorTree_AIGameUtility;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +34,7 @@ namespace AI_BehaviorTree_AIImplementation
             List<PlayerInformations> playerInfos = AIGameWorldUtils.GetPlayerInfosList();
             PlayerInformations myPlayerInfos = GetPlayerInfos(AIId, playerInfos);
 
-            /*
+            
             PlayerInformations target = null;
             foreach (PlayerInformations playerInfo in playerInfos)
             {
@@ -64,7 +65,7 @@ namespace AI_BehaviorTree_AIImplementation
                 if (AIGameWorldUtils.PlayerLayerMask == (AIGameWorldUtils.PlayerLayerMask | (1 << hit.collider.gameObject.layer)))
                     actionList.Add(new AIActionFire());
             }
-            */
+            
             return actionList;
         }
 
@@ -81,3 +82,4 @@ namespace AI_BehaviorTree_AIImplementation
         }
     }
 }
+*/

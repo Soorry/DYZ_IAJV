@@ -20,11 +20,11 @@ namespace LibraryCommon
             etat = EtatNoeud.NotExecuted;
         }
 
-        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, object info)
+        public EtatNoeud Execute(ref BehaviourTree bTree)
         {
             foreach (var n in noeuds)
             {
-                etat = n.Execute(ref gameWorld, aIActions, info);
+                etat = n.Execute(ref bTree);
                 if (etat == EtatNoeud.Success)
                 {
                     return etat;

@@ -6,7 +6,7 @@ namespace LibraryCommon
 {
     public interface INoeud
     {
-        EtatNoeud Execute(ref GameWorldUtils gameWorld,List<AIAction> aIActions, object info);
+        EtatNoeud Execute(ref BehaviourTree bTree);
     }
     public enum EtatNoeud
     {
