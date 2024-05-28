@@ -121,6 +121,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AIDecisionMaker.cs" />
+    <Compile Include="NoeudsCustom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\LibraryMarcBourgeois.rd.xml" />
   </ItemGroup>

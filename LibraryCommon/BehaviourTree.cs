@@ -11,12 +11,18 @@ namespace LibraryCommon
         public Selector start;
         public List<AIAction> actions;
         public Vector3 position;
+        public int AIId;
 
         public BehaviourTree(Selector first, GameWorldUtils gw)
         {
             start = first;
             actions = new List<AIAction>();
             gameWorld = gw;
+        }
+
+        public void AddAction()
+        {
+            // todo
         }
     }
 }

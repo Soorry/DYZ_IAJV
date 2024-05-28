@@ -14,6 +14,10 @@ namespace LibraryCommon
             noeuds = new List<INoeud>();
         }
 
+        public void Add()
+        {
+            // todo
+        }
 
         public EtatNoeud Execute(ref BehaviourTree bTree)
         {
