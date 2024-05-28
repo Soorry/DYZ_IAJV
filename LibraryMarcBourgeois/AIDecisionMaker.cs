@@ -37,15 +37,20 @@ namespace AI_BehaviorTree_AIImplementation
         {
             Selector start = new Selector();
 
+            Sequence dodgeSequence = new Sequence();
+            dodgeSequence.noeuds.Add(new NoeudsDashIfProjectileClose(10.0f, 10.0f));
+
             Sequence moveToBonusSequence = new Sequence();
-            moveToBonusSequence.noeuds.Add(new NoeudsLookAtClosestEnemy());
+            //moveToBonusSequence.noeuds.Add(new NoeudsLookAtClosestEnemy());
+            moveToBonusSequence.noeuds.Add(new NoeudsAnticipateAndLookAtEnemy());
             moveToBonusSequence.noeuds.Add(new NoeudsFire());
             moveToBonusSequence.noeuds.Add(new NoeudsMoveToBonus());
 
             Sequence moveToEnemySequence = new Sequence();
-            moveToEnemySequence.noeuds.Add(new NoeudsLookAtClosestEnemy());
+            //moveToEnemySequence.noeuds.Add(new NoeudsLookAtClosestEnemy());
+            moveToEnemySequence.noeuds.Add(new NoeudsAnticipateAndLookAtEnemy());
             moveToBonusSequence.noeuds.Add(new NoeudsFire());
-            moveToEnemySequence.noeuds.Add(new NoeudsCheckDistance(10.0f));
+            moveToEnemySequence.noeuds.Add(new NoeudsCheckDistance(10.0f, false));
             moveToEnemySequence.noeuds.Add(new NoeudsMoveToClosestEnemy());
 
             Sequence defaultSequence = new Sequence();
@@ -53,7 +58,7 @@ namespace AI_BehaviorTree_AIImplementation
 
             start.noeuds.Add(moveToBonusSequence);
             start.noeuds.Add(moveToEnemySequence);
-            //start.noeuds.Add(moveToBonusSequence);
+            start.noeuds.Add(defaultSequence);
 
             behaviourTree = new BehaviourTree(start, AIGameWorldUtils);
         }
@@ -65,9 +70,9 @@ namespace AI_BehaviorTree_AIImplementation
             behaviourTree.myPlayerInfos = GetPlayerInfos(AIId, playerInfos);
 
             behaviourTree.actions.Clear();
+            behaviourTree.previousGameWorld = behaviourTree.gameWorld;
             behaviourTree.gameWorld = AIGameWorldUtils;
             behaviourTree.start.Execute(ref behaviourTree);
-            Debug.Log("count actions : " + behaviourTree.actions.Count);
             return behaviourTree.actions;
         }
 

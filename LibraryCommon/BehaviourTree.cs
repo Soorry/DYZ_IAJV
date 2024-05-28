@@ -7,6 +7,7 @@ namespace LibraryCommon
 {
     public class BehaviourTree
     {
+        public GameWorldUtils previousGameWorld;
         public GameWorldUtils gameWorld;
         public Selector start;
         public List<AIAction> actions;
@@ -19,6 +20,7 @@ namespace LibraryCommon
             start = first;
             actions = new List<AIAction>();
             gameWorld = gw;
+            previousGameWorld = gw;
         }
 
         public void AddAction()
