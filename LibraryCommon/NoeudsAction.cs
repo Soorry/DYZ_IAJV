@@ -11,7 +11,7 @@ namespace LibraryCommon
     public class NoeudsFire : INoeud
     {
 
-        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
+        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, object info)
         {
 
             aIActions.Add(new AIActionFire());
@@ -21,18 +21,18 @@ namespace LibraryCommon
 
     public class NoeudsDash : INoeud
     {
-        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
+        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, object info)
         {
-            aIActions.Add(new AIActionDash(position));
+            aIActions.Add(new AIActionDash((Vector3)info));
             return EtatNoeud.Success;
         }
     }
 
     public class NoeudsLookAt : INoeud
     {
-        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
+        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, object info)
         {
-            aIActions.Add(new AIActionLookAtPosition(position));
+            aIActions.Add(new AIActionLookAtPosition((Vector3)info));
             return EtatNoeud.Success;
         }
     }
@@ -40,16 +40,16 @@ namespace LibraryCommon
     public class NoeudsMoveTo : INoeud
     {
 
-        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
+        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, object info)
         {
-            aIActions.Add(new AIActionMoveToDestination(position));
+            aIActions.Add(new AIActionMoveToDestination((Vector3)info));
             return EtatNoeud.Success;
         }
     }
 
     public class NoeudsStop : INoeud
     {
-        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
+        public EtatNoeud Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, object info)
         {
             aIActions.Add(new AIActionStopMovement());
             return EtatNoeud.Success;
