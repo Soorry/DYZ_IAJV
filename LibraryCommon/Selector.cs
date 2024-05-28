@@ -1,4 +1,4 @@
-﻿using AI_BehaviorTree_AIGameUtility;
+using AI_BehaviorTree_AIGameUtility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,12 +20,12 @@ namespace LibraryCommon
             etat = EtatNoeud.NotExecuted;
         }
 
-        public EtatNoeud Execute(object o, List<AIAction> aIActions)
+        etatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
         {
             foreach (var n in noeuds)
             {
-                etat = n.Execute(o, aIActions);
-                if (etat == EtatNoeud.Success)
+                etat = n.Execute(ref gameWorld, aIActions, position);
+                if (etat == etatNoeud.Sucess)
                 {
                     return etat;
                 }

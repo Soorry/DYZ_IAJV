@@ -1,9 +1,6 @@
-﻿using AI_BehaviorTree_AIGameUtility;
-using System;
+using AI_BehaviorTree_AIGameUtility;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 
 namespace LibraryCommon
 {
@@ -18,12 +15,12 @@ namespace LibraryCommon
         }
 
 
-        public EtatNoeud Execute(object o, List<AIAction> aIActions)
+        etatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
         {
             foreach (var n in noeuds)
             {
-                etat = n.Execute(o, aIActions);
-                if (etat == EtatNoeud.Fail)
+                etat = n.Execute(ref gameWorld, aIActions, position);
+                if (etat == etatNoeud.Fail)
                 {
                     return etat;
                 }

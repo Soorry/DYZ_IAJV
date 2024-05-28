@@ -1,8 +1,6 @@
-﻿using AI_BehaviorTree_AIGameUtility;
-using System;
+using AI_BehaviorTree_AIGameUtility;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -12,8 +10,8 @@ namespace LibraryCommon
 {
     public class NoeudsFire : INoeud
     {
-       
-        public EtatNoeud Execute(object param, List<AIAction> aIActions)
+
+        etatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
         {
 
             aIActions.Add(new AIActionFire());
@@ -23,52 +21,35 @@ namespace LibraryCommon
 
     public class NoeudsDash : INoeud
     {
-
-
-        public EtatNoeud Execute(object param, List<AIAction> aIActions)
+        etatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
         {
-            if(param != null && param.GetType() == typeof(UnityEngine.Vector3))
-            {
-                aIActions.Add(new AIActionDash(new UnityEngine.Vector3(0,0,10)));
-                return EtatNoeud.Success;
-            }
-            return EtatNoeud.Fail;
+            aIActions.Add(new AIActionDash(position));
+            return etatNoeud.Sucess;
         }
     }
 
     public class NoeudsLookAt : INoeud
     {
-       
-
-        public EtatNoeud Execute(object param, List<AIAction> aIActions)
+        etatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
         {
-            if (param != null && param.GetType() == typeof(UnityEngine.Vector3))
-            {
-                aIActions.Add(new AIActionLookAtPosition((UnityEngine.Vector3)param));
-                return EtatNoeud.Success;
-            }
-            return EtatNoeud.Fail;
+            aIActions.Add(new AIActionLookAtPosition(position));
+            return etatNoeud.Sucess;
         }
     }
 
     public class NoeudsMoveTo : INoeud
     {
- 
-        public EtatNoeud Execute(object param, List<AIAction> aIActions)
+
+        etatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
         {
-            if (param != null && param.GetType() == typeof(UnityEngine.Vector3))
-            {
-                aIActions.Add(new AIActionMoveToDestination((UnityEngine.Vector3)param));
-                return EtatNoeud.Success;
-            }
-            return EtatNoeud.Fail;
+            aIActions.Add(new AIActionMoveToDestination(position));
+            return etatNoeud.Sucess;
         }
     }
 
     public class NoeudsStop : INoeud
     {
-      
-        public EtatNoeud Execute(object param, List<AIAction> aIActions)
+        etatNoeud INoeud.Execute(ref GameWorldUtils gameWorld, List<AIAction> aIActions, Vector3 position)
         {
             aIActions.Add(new AIActionStopMovement());
             return EtatNoeud.Success;
