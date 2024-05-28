@@ -11,6 +11,7 @@ namespace LibraryCommon
         public Selector start;
         public List<AIAction> actions;
         public Vector3 position;
+        public PlayerInformations myPlayerInfos;
         public int AIId;
 
         public BehaviourTree(Selector first, GameWorldUtils gw)

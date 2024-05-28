@@ -37,34 +37,37 @@ namespace AI_BehaviorTree_AIImplementation
         {
             Selector start = new Selector();
 
-            Sequence detectAndFireSequence = new Sequence();
-            detectAndFireSequence.noeuds.Add(new NoeudsLookAtClosestEnemy());
-            detectAndFireSequence.noeuds.Add(new NoeudsCheckDistance(10.0f));
-            detectAndFireSequence.noeuds.Add(new NoeudsFire());
+            Sequence moveToBonusSequence = new Sequence();
+            moveToBonusSequence.noeuds.Add(new NoeudsLookAtClosestEnemy());
+            moveToBonusSequence.noeuds.Add(new NoeudsFire());
+            moveToBonusSequence.noeuds.Add(new NoeudsMoveToBonus());
 
             Sequence moveToEnemySequence = new Sequence();
             moveToEnemySequence.noeuds.Add(new NoeudsLookAtClosestEnemy());
+            moveToBonusSequence.noeuds.Add(new NoeudsFire());
             moveToEnemySequence.noeuds.Add(new NoeudsCheckDistance(10.0f));
-            moveToEnemySequence.noeuds.Add(new NoeudsMoveTo());
+            moveToEnemySequence.noeuds.Add(new NoeudsMoveToClosestEnemy());
 
-            Sequence moveToBonusSequence = new Sequence();
-            moveToBonusSequence.noeuds.Add(new NoeudsMoveToBonus());
+            Sequence defaultSequence = new Sequence();
+            defaultSequence.noeuds.Add(new NoeudsStop());
 
-            //start.noeuds.Add(detectAndFireSequence);
-            //start.noeuds.Add(moveToEnemySequence);
+            start.noeuds.Add(moveToBonusSequence);
+            start.noeuds.Add(moveToEnemySequence);
             //start.noeuds.Add(moveToBonusSequence);
-            start.noeuds.Add(new NoeudsMoveToBonus());
-            start.noeuds.Add(new NoeudsLookAtBonus());
 
             behaviourTree = new BehaviourTree(start, AIGameWorldUtils);
-            behaviourTree.AIId = AIId;
         }
 
         public List<AIAction> ComputeAIDecision()
         {
+            List<PlayerInformations> playerInfos = AIGameWorldUtils.GetPlayerInfosList();
+            behaviourTree.AIId = AIId;
+            behaviourTree.myPlayerInfos = GetPlayerInfos(AIId, playerInfos);
+
             behaviourTree.actions.Clear();
             behaviourTree.gameWorld = AIGameWorldUtils;
             behaviourTree.start.Execute(ref behaviourTree);
+            Debug.Log("count actions : " + behaviourTree.actions.Count);
             return behaviourTree.actions;
         }
 

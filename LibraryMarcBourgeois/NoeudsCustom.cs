@@ -10,16 +10,15 @@ namespace LibraryMarcBourgeois
         EtatNoeud INoeud.Execute(ref BehaviourTree bTree)
         {
             List<PlayerInformations> playerInfos = bTree.gameWorld.GetPlayerInfosList();
-            PlayerInformations myPlayerInfos = GetPlayerInfos(bTree.AIId, playerInfos);
 
             PlayerInformations closestEnemy = null;
             float closestDistance = float.MaxValue;
 
             foreach (var playerInfo in playerInfos)
             {
-                if (playerInfo.PlayerId != myPlayerInfos.PlayerId && playerInfo.IsActive)
+                if (playerInfo.PlayerId != bTree.myPlayerInfos.PlayerId && playerInfo.IsActive)
                 {
-                    float distance = Vector3.Distance(myPlayerInfos.Transform.Position, playerInfo.Transform.Position);
+                    float distance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position, playerInfo.Transform.Position);
                     if (distance < closestDistance)
                     {
                         closestDistance = distance;
@@ -36,15 +35,37 @@ namespace LibraryMarcBourgeois
 
             return EtatNoeud.Fail;
         }
+    }
 
-        private PlayerInformations GetPlayerInfos(int parPlayerId, List<PlayerInformations> parPlayerInfosList)
+    public class NoeudsMoveToClosestEnemy : INoeud
+    {
+        EtatNoeud INoeud.Execute(ref BehaviourTree bTree)
         {
-            foreach (PlayerInformations playerInfo in parPlayerInfosList)
+            List<PlayerInformations> playerInfos = bTree.gameWorld.GetPlayerInfosList();
+
+            PlayerInformations closestEnemy = null;
+            float closestDistance = float.MaxValue;
+
+            foreach (var playerInfo in playerInfos)
             {
-                if (playerInfo.PlayerId == parPlayerId)
-                    return playerInfo;
+                if (playerInfo.PlayerId != bTree.myPlayerInfos.PlayerId && playerInfo.IsActive)
+                {
+                    float distance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position, playerInfo.Transform.Position);
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestEnemy = playerInfo;
+                    }
+                }
             }
-            return null;
+
+            if (closestEnemy != null)
+            {
+                bTree.actions.Add(new AIActionMoveToDestination(closestEnemy.Transform.Position));
+                return EtatNoeud.Success;
+            }
+
+            return EtatNoeud.Fail;
         }
     }
 
@@ -104,45 +125,17 @@ namespace LibraryMarcBourgeois
         }
     }
 
-    public class NoeudsLookAtBonus : INoeud
-    {
-        EtatNoeud INoeud.Execute(ref BehaviourTree bTree)
-        {
-            List<PlayerInformations> playerInfos = bTree.gameWorld.GetPlayerInfosList();
-            List<BonusInformations> bonusInfos = bTree.gameWorld.GetBonusInfosList();
-            if (bonusInfos.Count > 0)
-            {
-                bTree.position = bonusInfos[0].Position;
-                NoeudsLookAt look = new NoeudsLookAt();
-                return look.Execute(ref bTree);
-            }
-            return EtatNoeud.Fail;
-        }
-    }
-
     public class NoeudsMoveToBonus : INoeud
     {
         EtatNoeud INoeud.Execute(ref BehaviourTree bTree)
         {
-            List<PlayerInformations> playerInfos = bTree.gameWorld.GetPlayerInfosList();
-            List<BonusInformations> bonusInfos = bTree.gameWorld.GetBonusInfosList();
-            if(bonusInfos.Count > 0) { 
-                bTree.position = bonusInfos[0].Position;
-                NoeudsMoveTo move = new NoeudsMoveTo();
-                return move.Execute(ref bTree);
-            }
-            return EtatNoeud.Fail;
-
-            /*List<PlayerInformations> playerInfos = bTree.gameWorld.GetPlayerInfosList();
-            PlayerInformations myPlayerInfos = GetPlayerInfos(bTree.AIId, playerInfos);
-
             List<BonusInformations> bonusInfos = bTree.gameWorld.GetBonusInfosList();
             BonusInformations closestBonus = null;
             float closestDistance = float.MaxValue;
 
             foreach (var bonusInfo in bonusInfos)
             {
-                float distance = Vector3.Distance(myPlayerInfos.Transform.Position, bonusInfo.Position);
+                float distance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position, bonusInfo.Position);
                 if (distance < closestDistance)
                 {
                     closestDistance = distance;
@@ -152,21 +145,12 @@ namespace LibraryMarcBourgeois
 
             if (closestBonus != null)
             {
-                bTree.actions.Add(new AIActionMoveToDestination(closestBonus.Position));
-                return EtatNoeud.Success;
+                bTree.position = closestBonus.Position;
+                NoeudsMoveTo move = new NoeudsMoveTo();
+                return move.Execute(ref bTree);
             }
 
-            return EtatNoeud.Fail;*/
-        }
-
-        private PlayerInformations GetPlayerInfos(int parPlayerId, List<PlayerInformations> parPlayerInfosList)
-        {
-            foreach (PlayerInformations playerInfo in parPlayerInfosList)
-            {
-                if (playerInfo.PlayerId == parPlayerId)
-                    return playerInfo;
-            }
-            return null;
+            return EtatNoeud.Fail;
         }
     }
 }
