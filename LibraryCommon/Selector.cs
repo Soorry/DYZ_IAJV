@@ -11,21 +11,21 @@ namespace LibraryCommon
     public class Selector : INoeud
     {
         public List<INoeud> noeuds { get; set; }
-        public etatNoeud etat { get; set; }
+        public EtatNoeud etat { get; set; }
 
 
         public Selector()
         {
             noeuds = new List<INoeud>();
-            etat = etatNoeud.NotExecuted;
+            etat = EtatNoeud.NotExecuted;
         }
 
-        public etatNoeud Execute(object o, List<AIAction> aIActions)
+        public EtatNoeud Execute(object o, List<AIAction> aIActions)
         {
             foreach (var n in noeuds)
             {
                 etat = n.Execute(o, aIActions);
-                if (etat == etatNoeud.Sucess)
+                if (etat == EtatNoeud.Success)
                 {
                     return etat;
                 }

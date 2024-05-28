@@ -13,11 +13,11 @@ namespace LibraryCommon
     public class NoeudsFire : INoeud
     {
        
-        public etatNoeud Execute(object param, List<AIAction> aIActions)
+        public EtatNoeud Execute(object param, List<AIAction> aIActions)
         {
 
             aIActions.Add(new AIActionFire());
-            return etatNoeud.Sucess;
+            return EtatNoeud.Success;
         }
     }
 
@@ -25,14 +25,14 @@ namespace LibraryCommon
     {
 
 
-        public etatNoeud Execute(object param, List<AIAction> aIActions)
+        public EtatNoeud Execute(object param, List<AIAction> aIActions)
         {
             if(param != null && param.GetType() == typeof(UnityEngine.Vector3))
             {
                 aIActions.Add(new AIActionDash(new UnityEngine.Vector3(0,0,10)));
-                return etatNoeud.Sucess;
+                return EtatNoeud.Success;
             }
-            return etatNoeud.Fail;
+            return EtatNoeud.Fail;
         }
     }
 
@@ -40,38 +40,38 @@ namespace LibraryCommon
     {
        
 
-        public etatNoeud Execute(object param, List<AIAction> aIActions)
+        public EtatNoeud Execute(object param, List<AIAction> aIActions)
         {
             if (param != null && param.GetType() == typeof(UnityEngine.Vector3))
             {
                 aIActions.Add(new AIActionLookAtPosition((UnityEngine.Vector3)param));
-                return etatNoeud.Sucess;
+                return EtatNoeud.Success;
             }
-            return etatNoeud.Fail;
+            return EtatNoeud.Fail;
         }
     }
 
     public class NoeudsMoveTo : INoeud
     {
  
-        public etatNoeud Execute(object param, List<AIAction> aIActions)
+        public EtatNoeud Execute(object param, List<AIAction> aIActions)
         {
             if (param != null && param.GetType() == typeof(UnityEngine.Vector3))
             {
                 aIActions.Add(new AIActionMoveToDestination((UnityEngine.Vector3)param));
-                return etatNoeud.Sucess;
+                return EtatNoeud.Success;
             }
-            return etatNoeud.Fail;
+            return EtatNoeud.Fail;
         }
     }
 
     public class NoeudsStop : INoeud
     {
       
-        public etatNoeud Execute(object param, List<AIAction> aIActions)
+        public EtatNoeud Execute(object param, List<AIAction> aIActions)
         {
             aIActions.Add(new AIActionStopMovement());
-            return etatNoeud.Sucess;
+            return EtatNoeud.Success;
         }
     }
 }

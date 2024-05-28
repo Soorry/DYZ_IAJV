@@ -5,12 +5,12 @@ namespace LibraryCommon
 {
     public interface INoeud
     {
-        etatNoeud Execute(object param,List<AIAction> aIActions);
+        EtatNoeud Execute(object param,List<AIAction> aIActions);
     }
-    public enum etatNoeud
+    public enum EtatNoeud
     {
         Fail,
-        Sucess,
+        Success,
         Running,
         NotExecuted,
     }

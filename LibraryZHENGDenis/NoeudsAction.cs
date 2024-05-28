@@ -12,11 +12,11 @@ namespace LibraryZHENGDenis
 {
     public class NoeudsFire : INoeud
     {
-        public etatNoeud Execute(object param, List<AIAction> aIActions)
+        public EtatNoeud Execute(object param, List<AIAction> aIActions)
         {
             
             aIActions.Add(new AIActionFire());
-            return etatNoeud.Sucess;
+            return EtatNoeud.Success;
         }
     }
 }

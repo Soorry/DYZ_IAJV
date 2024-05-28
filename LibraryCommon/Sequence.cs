@@ -10,7 +10,7 @@ namespace LibraryCommon
     public class Sequence : INoeud
     {
         List<INoeud> noeuds = new List<INoeud>();
-        etatNoeud etat = etatNoeud.NotExecuted;
+        EtatNoeud etat = EtatNoeud.NotExecuted;
 
         public Sequence()
         {
@@ -18,12 +18,12 @@ namespace LibraryCommon
         }
 
 
-        public etatNoeud Execute(object o, List<AIAction> aIActions)
+        public EtatNoeud Execute(object o, List<AIAction> aIActions)
         {
             foreach (var n in noeuds)
             {
                 etat = n.Execute(o, aIActions);
-                if (etat == etatNoeud.Fail)
+                if (etat == EtatNoeud.Fail)
                 {
                     return etat;
                 }

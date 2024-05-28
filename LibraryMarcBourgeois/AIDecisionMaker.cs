@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
-using ProjetCommun;
+using LibraryCommon;
 
 namespace AI_BehaviorTree_AIImplementation
 {
@@ -35,8 +35,8 @@ namespace AI_BehaviorTree_AIImplementation
             PlayerInformations myPlayerInfos = GetPlayerInfos(AIId, playerInfos);
 
             Selector start = new Selector();
-            start.noeuds.Add(new NoeudsDash());
-            actionList.AddRange(start.actions);
+            start.noeuds.Add(new NoeudsFire());
+            start.Execute(null, actionList);
 
             /*
             PlayerInformations target = null;
