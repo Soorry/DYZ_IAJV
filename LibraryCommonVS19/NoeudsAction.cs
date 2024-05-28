@@ -1,79 +1,55 @@
-﻿using AI_BehaviorTree_AIGameUtility;
-using System;
+using AI_BehaviorTree_AIGameUtility;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
 
-namespace ProjetCommun
+namespace LibraryCommon
 {
-    class NoeudsFire : INoeud
+    public class NoeudsFire : INoeud
     {
-        public List<AIAction> actions { get => actions; set => actions = value; }
-
-        public etatNoeud Execute(object param)
+        public EtatNoeud Execute(ref BehaviourTree bTree)
         {
-            actions.Add(new AIActionFire());
-            return etatNoeud.Sucess;
+            bTree.actions.Add(new AIActionFire());
+            return EtatNoeud.Success;
         }
     }
 
     public class NoeudsDash : INoeud
     {
-        public List<AIAction> actions { get => actions; set => actions = value; }
-
-        public etatNoeud Execute(object param)
+        public EtatNoeud Execute(ref BehaviourTree bTree)
         {
-            if(param != null && param.GetType() == typeof(UnityEngine.Vector3))
-            {
-                actions.Add(new AIActionDash(new UnityEngine.Vector3(0,0,10)));
-                return etatNoeud.Sucess;
-            }
-            return etatNoeud.Fail;
+            bTree.actions.Add(new AIActionDash(bTree.position));
+            return EtatNoeud.Success;
         }
     }
 
-    class NoeudsLookAt : INoeud
+    public class NoeudsLookAt : INoeud
     {
-        public List<AIAction> actions { get => actions; set => actions = value; }
-
-        public etatNoeud Execute(object param)
+        public EtatNoeud Execute(ref BehaviourTree bTree)
         {
-            if (param != null && param.GetType() == typeof(UnityEngine.Vector3))
-            {
-                actions.Add(new AIActionLookAtPosition((UnityEngine.Vector3)param));
-                return etatNoeud.Sucess;
-            }
-            return etatNoeud.Fail;
+            bTree.actions.Add(new AIActionLookAtPosition(bTree.position));
+            return EtatNoeud.Success;
         }
     }
 
-    class NoeudsMoveTo : INoeud
+    public class NoeudsMoveTo : INoeud
     {
-        public List<AIAction> actions { get => actions; set => actions = value; }
-
-        public etatNoeud Execute(object param)
+        public EtatNoeud Execute(ref BehaviourTree bTree)
         {
-            if (param != null && param.GetType() == typeof(UnityEngine.Vector3))
-            {
-                actions.Add(new AIActionMoveToDestination((UnityEngine.Vector3)param));
-                return etatNoeud.Sucess;
-            }
-            return etatNoeud.Fail;
+            bTree.actions.Add(new AIActionMoveToDestination(bTree.position));
+            return EtatNoeud.Success;
         }
     }
 
-    class NoeudsStop : INoeud
+    public class NoeudsStop : INoeud
     {
-        public List<AIAction> actions { get => actions; set => actions = value; }
-
-        public etatNoeud Execute(object param)
+        public EtatNoeud Execute(ref BehaviourTree bTree)
         {
-            actions.Add(new AIActionStopMovement());
-            return etatNoeud.Sucess;
+            bTree.actions.Add(new AIActionStopMovement());
+            return EtatNoeud.Success;
         }
     }
 }

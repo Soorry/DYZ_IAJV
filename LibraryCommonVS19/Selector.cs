@@ -1,4 +1,4 @@
-﻿using AI_BehaviorTree_AIGameUtility;
+using AI_BehaviorTree_AIGameUtility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,27 +6,30 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace ProjetCommun
+namespace LibraryCommon
 {
     public class Selector : INoeud
     {
-        public List<INoeud> noeuds = new List<INoeud>();
-        public etatNoeud etat = etatNoeud.NotExecuted;
-
-        public List<AIAction> actions { get => actions; set => actions = value; }
+        public List<INoeud> noeuds { get; set; }
+        public EtatNoeud etat { get; set; }
 
         public Selector()
         {
-            actions = new List<AIAction>();
+            noeuds = new List<INoeud>();
+            etat = EtatNoeud.NotExecuted;
         }
 
-        public etatNoeud Execute(object o)
+        public void Add()
+        {
+            // todo
+        }
+        
+        public EtatNoeud Execute(ref BehaviourTree bTree)
         {
             foreach (var n in noeuds)
             {
-                etat = n.Execute(o);
-                actions.AddRange(n.actions);
-                if (etat == etatNoeud.Sucess)
+                etat = n.Execute(ref bTree);
+                if (etat == EtatNoeud.Success)
                 {
                     return etat;
                 }

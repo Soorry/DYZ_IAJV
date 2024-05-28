@@ -1,17 +1,18 @@
-﻿using AI_BehaviorTree_AIGameUtility;
+using AI_BehaviorTree_AIGameUtility;
 using System.Collections.Generic;
+using UnityEngine;
 
-namespace ProjetCommun
+namespace LibraryCommon
 {
     public interface INoeud
     {
-        List<AIAction> actions { get; set; }
-        etatNoeud Execute(object param);
+        EtatNoeud Execute(ref BehaviourTree bTree);
     }
-    public enum etatNoeud
+
+    public enum EtatNoeud
     {
         Fail,
-        Sucess,
+        Success,
         Running,
         NotExecuted,
     }

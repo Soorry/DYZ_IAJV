@@ -1,27 +1,30 @@
-﻿using AI_BehaviorTree_AIGameUtility;
-using System;
+using AI_BehaviorTree_AIGameUtility;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnityEngine;
 
-namespace ProjetCommun
+namespace LibraryCommon
 {
     public class Sequence : INoeud
     {
-        List<INoeud> noeuds = new List<INoeud>();
-        List<AIAction> actions = new List<AIAction>();
-        etatNoeud etat = etatNoeud.NotExecuted;
+        public List<INoeud> noeuds = new List<INoeud>();
+        EtatNoeud etat = EtatNoeud.NotExecuted;
 
-        List<AIAction> INoeud.actions { get => actions; set => actions = value; }
+        public Sequence()
+        {
+            noeuds = new List<INoeud>();
+        }
 
-        public etatNoeud Execute(object o)
+        public void Add()
+        {
+            // todo
+        }
+
+        public EtatNoeud Execute(ref BehaviourTree bTree)
         {
             foreach (var n in noeuds)
             {
-                etat = n.Execute(o);
-                actions.AddRange(n.actions);
-                if (etat == etatNoeud.Fail)
+                etat = n.Execute(ref bTree);
+                if (etat == EtatNoeud.Fail)
                 {
                     return etat;
                 }
