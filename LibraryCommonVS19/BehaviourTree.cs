@@ -1,4 +1,4 @@
-﻿using AI_BehaviorTree_AIGameUtility;
+using AI_BehaviorTree_AIGameUtility;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,11 +9,16 @@ namespace LibraryCommon
     {
         public GameWorldUtils previousGameWorld;
         public GameWorldUtils gameWorld;
+        public int AIId;
+
         public Selector start;
         public List<AIAction> actions;
         public Vector3 position;
         public PlayerInformations myPlayerInfos;
-        public int AIId;
+        public List<string> alliedNames;
+
+        public PlayerInformations myplayerInformations; // deprecated (use myPlayerInfos)
+        public List<Vector3> PrevPlayersPos = new List<Vector3>(); // deprecated (use previousGameWorld.GetPlayerInfosList())
 
         public BehaviourTree(Selector first, GameWorldUtils gw)
         {
