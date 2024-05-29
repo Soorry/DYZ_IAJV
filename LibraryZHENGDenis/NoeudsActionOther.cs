@@ -75,6 +75,7 @@ namespace LibraryZHENGDenis
                 if (player.PlayerId == bTree.myplayerInformations.PlayerId)
                     continue;
                 if (player.IsActive == false) continue;
+                if (bTree.alliedNames.Contains(player.Name)) continue;
                 float distance = Vector3.Distance(bTree.myplayerInformations.Transform.Position, player.Transform.Position);
                 if (distance < closestDistance)
                 {
@@ -199,6 +200,72 @@ namespace LibraryZHENGDenis
             return noeudsMoveTo.Execute(ref bTree);
         }
     }
+    public class NoeudFireWhenSeesPlayer : INoeud
+    {
+        public EtatNoeud Execute(ref BehaviourTree bTree)
+        {
+            List<PlayerInformations> playerInfos = bTree.gameWorld.GetPlayerInfosList();
+
+            if (playerInfos == null || playerInfos.Count == 0)
+            {
+                return EtatNoeud.Fail;
+            }
+
+            PlayerInformations closestPlayer = null;
+            float closestDistance = float.MaxValue;
+
+            foreach (var player in playerInfos)
+            {
+                if (player.PlayerId == bTree.myplayerInformations.PlayerId)
+                    continue;
+                if (!player.IsActive)
+                    continue;
+
+                float distance = Vector3.Distance(bTree.myplayerInformations.Transform.Position, player.Transform.Position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestPlayer = player;
+                }
+            }
+
+            if (closestPlayer == null)
+            {
+                return EtatNoeud.Fail;
+            }
+
+            Vector3 ennemyPos = closestPlayer.Transform.Position;
+            Vector3 playerPos = bTree.myplayerInformations.Transform.Position;
+            Vector3 forward = playerPos + bTree.myplayerInformations.Transform.Rotation * Vector3.forward;
+
+            if (Vector3.Angle(playerPos - forward, playerPos - ennemyPos) < 3)
+            {
+                bTree.actions.Add(new AIActionFire());
+                return EtatNoeud.Success;
+            }
+            return EtatNoeud.Fail;
+        }
+    }
+    public class NoeudReloadIfNecessary : INoeud
+    {
+        public EtatNoeud Execute(ref BehaviourTree bTree)
+        {
+            if (bTree.myplayerInformations.SalvoRemainingAmount < 5)
+            {
+                bTree.actions.Add(new AIActionReload());
+                return EtatNoeud.Success;
+            }
+            return EtatNoeud.Fail;
+        }
+    }
+    public class NoeudAlwaysFail : INoeud
+    {
+        public EtatNoeud Execute(ref BehaviourTree bTree)
+        {
+            return EtatNoeud.Fail;
+        }
+    }
+
 
 }
 
