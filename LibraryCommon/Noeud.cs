@@ -8,6 +8,7 @@ namespace LibraryCommon
     {
         EtatNoeud Execute(ref BehaviourTree bTree);
     }
+
     public enum EtatNoeud
     {
         Fail,

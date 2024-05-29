@@ -10,10 +10,8 @@ namespace LibraryCommon
 {
     public class NoeudsFire : INoeud
     {
-
         public EtatNoeud Execute(ref BehaviourTree bTree)
         {
-
             bTree.actions.Add(new AIActionFire());
             return EtatNoeud.Success;
         }
@@ -39,7 +37,6 @@ namespace LibraryCommon
 
     public class NoeudsMoveTo : INoeud
     {
-
         public EtatNoeud Execute(ref BehaviourTree bTree)
         {
             bTree.actions.Add(new AIActionMoveToDestination(bTree.position));

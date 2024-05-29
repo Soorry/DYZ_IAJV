@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using LibraryCommon;
+using LibraryMarcBourgeois;
 
 namespace AI_BehaviorTree_AIImplementation
 {
@@ -26,51 +27,54 @@ namespace AI_BehaviorTree_AIImplementation
 
         public void SetAIGameWorldUtils(GameWorldUtils parGameWorldUtils) { AIGameWorldUtils = parGameWorldUtils; }
 
-        //Fin du bloc de fonction nécessaire (Attention ComputeAIDecision en fait aussi partit)
+        public void OnMyAIDeath() { }
+
+        //Fin du bloc de fonction nécessaire (Attention ComputeAIDecision en fait aussi partie)
+
+        public BehaviourTree behaviourTree;
+
+        public AIDecisionMaker()
+        {
+            Selector start = new Selector();
+
+            Sequence dodgeSequence = new Sequence();
+            dodgeSequence.noeuds.Add(new NoeudsDashIfProjectileClose(1.0f, 1000.0f));
+
+            Sequence moveToBonusSequence = new Sequence();
+            //moveToBonusSequence.noeuds.Add(new NoeudsLookAtClosestEnemy());
+            moveToBonusSequence.noeuds.Add(new NoeudsAnticipateAndLookAtEnemy(0.005f));
+            moveToBonusSequence.noeuds.Add(new NoeudsFire());
+            moveToBonusSequence.noeuds.Add(new NoeudsMoveToBonus());
+
+            Sequence moveToEnemySequence = new Sequence();
+            //moveToEnemySequence.noeuds.Add(new NoeudsLookAtClosestEnemy());
+            moveToEnemySequence.noeuds.Add(new NoeudsAnticipateAndLookAtEnemy(0.005f));
+            moveToBonusSequence.noeuds.Add(new NoeudsFire());
+            //moveToEnemySequence.noeuds.Add(new NoeudsCheckDistance(10.0f, false));
+            moveToEnemySequence.noeuds.Add(new NoeudsMoveToClosestEnemy());
+
+            Sequence defaultSequence = new Sequence();
+            defaultSequence.noeuds.Add(new NoeudsStop());
+            
+            start.noeuds.Add(dodgeSequence);
+            start.noeuds.Add(moveToBonusSequence);
+            start.noeuds.Add(moveToEnemySequence);
+            start.noeuds.Add(defaultSequence);
+
+            behaviourTree = new BehaviourTree(start, AIGameWorldUtils);
+        }
 
         public List<AIAction> ComputeAIDecision()
         {
-            List<AIAction> actionList = new List<AIAction>();
             List<PlayerInformations> playerInfos = AIGameWorldUtils.GetPlayerInfosList();
-            PlayerInformations myPlayerInfos = GetPlayerInfos(AIId, playerInfos);
+            behaviourTree.AIId = AIId;
+            behaviourTree.myPlayerInfos = GetPlayerInfos(AIId, playerInfos);
 
-            Selector start = new Selector();
-            start.noeuds.Add(new NoeudsFire());
-            start.Execute(null, actionList);
-
-            /*
-            PlayerInformations target = null;
-            foreach (PlayerInformations playerInfo in playerInfos)
-            {
-                if (!playerInfo.IsActive)
-                    continue;
-
-                if (playerInfo.PlayerId == myPlayerInfos.PlayerId)
-                    continue;
-
-                target = playerInfo;
-                break;
-            }
-
-            if (target == null)
-                return actionList;
-
-            actionList.Add(new AIActionLookAtPosition(target.Transform.Position));
-
-            if (Vector3.Distance(myPlayerInfos.Transform.Position, target.Transform.Position) > 10.0f)
-                actionList.Add(new AIActionMoveToDestination(target.Transform.Position));
-            else
-                actionList.Add(new AIActionStopMovement());
-
-            RaycastHit hit;
-            Vector3 direction = myPlayerInfos.Transform.Rotation * Vector3.forward;
-            if (Physics.Raycast(myPlayerInfos.Transform.Position, direction.normalized, out hit, 100.0f))
-            {
-                if (AIGameWorldUtils.PlayerLayerMask == (AIGameWorldUtils.PlayerLayerMask | (1 << hit.collider.gameObject.layer)))
-                    actionList.Add(new AIActionFire());
-            }
-            */
-            return actionList;
+            behaviourTree.actions.Clear();
+            behaviourTree.previousGameWorld = behaviourTree.gameWorld;
+            behaviourTree.gameWorld = AIGameWorldUtils;
+            behaviourTree.start.Execute(ref behaviourTree);
+            return behaviourTree.actions;
         }
 
         public PlayerInformations GetPlayerInfos(int parPlayerId, List<PlayerInformations> parPlayerInfosList)

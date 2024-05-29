@@ -1,4 +1,4 @@
-using AI_BehaviorTree_AIGameUtility;
+﻿using AI_BehaviorTree_AIGameUtility;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,8 +14,6 @@ namespace LibraryCommon
         public Vector3 position;
         public PlayerInformations myPlayerInfos;
         public int AIId;
-        public PlayerInformations myplayerInformations;
-        public List<Vector3> PrevPlayersPos = new List<Vector3>();
 
         public BehaviourTree(Selector first, GameWorldUtils gw)
         {

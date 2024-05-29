@@ -120,6 +120,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BehaviourTree.cs" />
     <Compile Include="Noeud.cs" />
     <Compile Include="NoeudsAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -121,6 +121,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AIDecisionMaker.cs" />
+    <Compile Include="NoeudsCustom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\LibraryMarcBourgeois.rd.xml" />
   </ItemGroup>
@@ -138,9 +139,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibraryCommon\LibraryCommon.csproj">
-      <Project>{f78c5a34-2365-4689-8a9b-ebf536342256}</Project>
-      <Name>LibraryCommon</Name>
+    <ProjectReference Include="..\LibraryCommonVS19\LibraryCommonVS19.csproj">
+      <Project>{85c7b8e0-da8d-455c-be41-591eae088847}</Project>
+      <Name>LibraryCommonVS19</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
