@@ -1,9 +1,11 @@
 ﻿using AI_BehaviorTree_AIGameUtility;
 using LibraryCommon;
+using LibraryZHENGDenis;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Windows.Services.Maps;
 
 
 namespace AI_BehaviorTree_AIImplementation
@@ -27,19 +29,61 @@ namespace AI_BehaviorTree_AIImplementation
 
         public void SetAIGameWorldUtils(GameWorldUtils parGameWorldUtils) { AIGameWorldUtils = parGameWorldUtils; }
 
+        public void OnMyAIDeath() { }
         //Fin du bloc de fonction nécessaire (Attention ComputeAIDecision en fait aussi partit)
+        public BehaviourTree behaviourTree;
+
+        public AIDecisionMaker()
+        {
+            Selector start = new Selector();
+
+            // Sequence to handle escaping projectiles
+            LookAtPlayerClosest lookAtPlayerClosest = new LookAtPlayerClosest();
+            NoeudsFire noeudsFire = new NoeudsFire();
+
+            Sequence escapeSequence = new Sequence();
+            EchapProjectileMove echapProjectileMove = new EchapProjectileMove();
+            
+            escapeSequence.noeuds.Add(lookAtPlayerClosest);
+            escapeSequence.noeuds.Add(noeudsFire);
+            escapeSequence.noeuds.Add(echapProjectileMove);
+
+            Sequence bonusSequence = new Sequence();
+            MoveBonusClosest moveBonusClosest = new MoveBonusClosest();
+            bonusSequence.noeuds.Add(moveBonusClosest);
+           
+            Sequence moveToPlayerSequence = new Sequence();
+            MoveToPlayerClosest moveToPlayerClosest = new MoveToPlayerClosest();
+            moveToPlayerSequence.noeuds.Add(moveToPlayerClosest);
+
+           
+            start.noeuds.Add(escapeSequence);  
+            start.noeuds.Add(bonusSequence);
+            start.noeuds.Add(moveToPlayerSequence);
+           
+            behaviourTree = new BehaviourTree(start, AIGameWorldUtils);
+        }
+
 
         public List<AIAction> ComputeAIDecision()
         {
-            List<AIAction> actionList = new List<AIAction>();
             List<PlayerInformations> playerInfos = AIGameWorldUtils.GetPlayerInfosList();
             PlayerInformations myPlayerInfos = GetPlayerInfos(AIId, playerInfos);
 
-            Selector start = new Selector();
-            start.noeuds.Add(new NoeudsFire());
-            start.Execute(null,actionList);
-            return actionList;
+            List<Vector3> playerPos = new List<Vector3>();
+            foreach (PlayerInformations playerInfo in playerInfos)
+            {
+                playerPos.Add(playerInfo.Transform.Position);
+            }
+            behaviourTree.actions.Clear();
+            behaviourTree.gameWorld = AIGameWorldUtils;
+            behaviourTree.myplayerInformations = myPlayerInfos;
+            behaviourTree.start.Execute(ref behaviourTree);
+            behaviourTree.PrevPlayersPos.Clear();
+            behaviourTree.PrevPlayersPos.AddRange(playerPos);
+            return behaviourTree.actions;
         }
+
 
         public PlayerInformations GetPlayerInfos(int parPlayerId, List<PlayerInformations> parPlayerInfosList)
         {

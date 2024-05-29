@@ -121,7 +121,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AIDecisionMaker.cs" />
-    <Compile Include="NoeudsAction.cs" />
+    <Compile Include="NoeudsActionOther.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\LibraryZHENGDenis.rd.xml" />
   </ItemGroup>

@@ -11,6 +11,8 @@ namespace LibraryCommon
         public Selector start;
         public List<AIAction> actions;
         public Vector3 position;
+        public PlayerInformations myplayerInformations;
+        public List<Vector3> PrevPlayersPos = new List<Vector3>();
 
         public BehaviourTree(Selector first, GameWorldUtils gw)
         {
