@@ -94,43 +94,7 @@ namespace LibraryMarcBourgeois
         }
     }
 
-    public class NoeudsCheckDistance : INoeud
-    {
-        private float distanceThreshold;
-        private bool checkInside; // false : out, true : in
-
-        public NoeudsCheckDistance(float d, bool inside = true)
-        {
-            distanceThreshold = d;
-            checkInside = inside;
-        }
-
-        EtatNoeud INoeud.Execute(ref BehaviourTree bTree)
-        {
-            if (checkInside)
-            {
-                if (bTree.closestTarget != null)
-                {
-                    float distance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position,  bTree.closestTarget.Transform.Position);
-                    return distance <= distanceThreshold ? EtatNoeud.Fail : EtatNoeud.Success;
-                }
-
-                return EtatNoeud.Fail;
-            }
-            else
-            {
-                if (bTree.closestTarget != null)
-                {
-                    float distance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position, bTree.closestTarget.Transform.Position);
-                    return distance <= distanceThreshold ? EtatNoeud.Success : EtatNoeud.Fail;
-                }
-
-                return EtatNoeud.Success;
-            }
-        }
-    }
-
-    public class NoeudsMoveToBonus : INoeud
+    public class NoeudsMoveToClosestBonus : INoeud
     {
         EtatNoeud INoeud.Execute(ref BehaviourTree bTree)
         {
@@ -159,6 +123,7 @@ namespace LibraryMarcBourgeois
         }
     }
 
+    // Utilise la position de tout les bonus connus qu'ils aient spawn ou non
     public class NoeudsMoveToClosestBonusLastKnownPosition : INoeud
     {
         public EtatNoeud Execute(ref BehaviourTree bTree)
@@ -186,6 +151,7 @@ namespace LibraryMarcBourgeois
         }
     }
 
+    // Spider man dodge (big node)
     public class NoeudsDashIfProjectileClose : INoeud
     {
         private float dangerDistance;
@@ -263,7 +229,6 @@ namespace LibraryMarcBourgeois
 
             // Always success
             return EtatNoeud.Success;
-            //return EtatNoeud.Fail;
         }
     }
 
@@ -273,11 +238,14 @@ namespace LibraryMarcBourgeois
         {
             if (bTree.closestTarget != null)
             {
-                if(IsEnemyInFieldOfView(bTree.myPlayerInfos, bTree.closestTarget))
+                if(IsEnemyInFieldOfView(bTree.myPlayerInfos, bTree.closestTarget, 30))
                 {
                     bTree.actions.Add(new AIActionFire()); // Fire at target
                     return EtatNoeud.Success;
                 }
+
+                // Detection de mur (pas 100% fonctionnel)
+
                 /*Vector3 directionToEnemy = closestEnemy.Transform.Position - bTree.myPlayerInfos.Transform.Position;
                 RaycastHit hit;
                 if (Physics.Raycast(bTree.myPlayerInfos.Transform.Position, directionToEnemy, out hit, 500f))
@@ -295,12 +263,10 @@ namespace LibraryMarcBourgeois
             return EtatNoeud.Success;
         }
 
-        private bool IsEnemyInFieldOfView(PlayerInformations myPlayerInfos, PlayerInformations enemy)
+        private bool IsEnemyInFieldOfView(PlayerInformations myPlayerInfos, PlayerInformations enemy, float fieldOfView)
         {
             Vector3 directionToEnemy = (enemy.Transform.Position - myPlayerInfos.Transform.Position).normalized;
             float angle = Vector3.Angle(myPlayerInfos.Transform.Rotation * Vector3.forward, directionToEnemy);
-
-            float fieldOfView = 30f;
 
             return angle <= fieldOfView / 2f;
         }
@@ -344,11 +310,12 @@ namespace LibraryMarcBourgeois
         }
     }
 
+    // Not used
     public class NoeudsReloadIfEnemyBehind : INoeud
     {
         public EtatNoeud Execute(ref BehaviourTree bTree)
         {
-            if (bTree.closestTarget != null && IsEnemyBehind(bTree.myPlayerInfos, bTree.closestTarget))
+            if (bTree.closestTarget != null && IsEnemyBehind(bTree.myPlayerInfos, bTree.closestTarget, 180f))
             {
                 bTree.actions.Add(new AIActionReload());
                 return EtatNoeud.Success;
@@ -356,18 +323,13 @@ namespace LibraryMarcBourgeois
 
             // Always true
             return EtatNoeud.Success;
-            //return EtatNoeud.Fail;
         }
 
-        private bool IsEnemyBehind(PlayerInformations myPlayerInfos, PlayerInformations enemy)
+        private bool IsEnemyBehind(PlayerInformations myPlayerInfos, PlayerInformations enemy, float fieldOfView)
         {
             Vector3 directionToEnemy = (enemy.Transform.Position - myPlayerInfos.Transform.Position).normalized;
             Vector3 oppositeDirection = -(myPlayerInfos.Transform.Rotation * Vector3.forward); // Direction opposée
-
             float angle = Vector3.Angle(oppositeDirection, directionToEnemy);
-
-            // Assuming an angle of 180 degrees for the "behind" check
-            float fieldOfView = 180f;
 
             return angle <= fieldOfView / 2f;
         }

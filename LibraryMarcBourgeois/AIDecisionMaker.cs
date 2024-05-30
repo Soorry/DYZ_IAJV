@@ -32,14 +32,20 @@ namespace AI_BehaviorTree_AIImplementation
 
         public BehaviourTree behaviourTree;
 
+        // Elon Musk utilise LibraryCommonVS19
         public AIDecisionMaker()
         {
+            /// Le behaviour tree ci-dessous correspond à ElonMuskBehaviourTreeDiagramNonOptimized.png
+            /// Pour une version factorisée voir ElonMuskBehaviourTreeDiagramOptimized.png
+            /// Les images sont situées à la source du dossier LibraryMarcBourgeois
+            /// Note : Elon semble encore plus fort quand le temps est accéléré à x5 ou x10 sur des parties de plus longue durée
+
             Sequence startSequence = new Sequence();
             Selector startSelector = new Selector();
 
             Sequence rushBonus = new Sequence();
             rushBonus.Add(new NoeudsDashToClosestBonus());
-            rushBonus.Add(new NoeudsMoveToBonus());
+            rushBonus.Add(new NoeudsMoveToClosestBonus());
 
             Sequence dodgeSequence = new Sequence();
             dodgeSequence.Add(new NoeudsDashIfProjectileClose(5.0f)); // Can fail
@@ -47,18 +53,18 @@ namespace AI_BehaviorTree_AIImplementation
             Sequence targetAndBonusSequence = new Sequence();
             targetAndBonusSequence.Add(new NoeudsIsTarget()); // Condition
             targetAndBonusSequence.Add(new NoeudsIsBonus()); // Condition
-            targetAndBonusSequence.Add(new NoeudsPredictAndLookAtEnemy()); // Always success
+            targetAndBonusSequence.Add(new NoeudsPredictAndLookAtEnemy(0.01f)); // Always success
             targetAndBonusSequence.Add(new NoeudsFireAtVisibleEnemy()); // Always success
             targetAndBonusSequence.Add(rushBonus);
 
             Sequence targetAndNoBonusSequence = new Sequence();
             targetAndNoBonusSequence.Add(new NoeudsIsTarget()); // Condition
-            targetAndNoBonusSequence.Add(new NoeudsPredictAndLookAtEnemy()); // Always success
+            targetAndNoBonusSequence.Add(new NoeudsPredictAndLookAtEnemy(0.01f)); // Always success
             targetAndNoBonusSequence.Add(new NoeudsFireAtVisibleEnemy()); // Always success
 
             Selector ammoSelector = new Selector();
             Sequence seq1 = new Sequence();
-            seq1.Add(new NoeudsAmmoHigherThan(4)); // Condition
+            seq1.Add(new NoeudsAmmoHigherThan(0)); // Condition
             seq1.Add(new NoeudsMoveToClosestEnemy());
             ammoSelector.Add(seq1);
             ammoSelector.Add(new NoeudsMoveToClosestBonusLastKnownPosition()); // Can fail
@@ -78,8 +84,7 @@ namespace AI_BehaviorTree_AIImplementation
             Sequence defaultSequence = new Sequence();
             defaultSequence.Add(new NoeudsReload());
             defaultSequence.Add(new NoeudsStop());
-
-            //startSelector.Add(dodgeSequence);
+            
             startSelector.Add(targetAndBonusSequence);
             startSelector.Add(targetAndNoBonusSequence);
             startSelector.Add(noTargetAndBonusSequence);
@@ -89,55 +94,8 @@ namespace AI_BehaviorTree_AIImplementation
             startSequence.Add(dodgeSequence); // Always success
             startSequence.Add(startSelector);
 
-
-            /*Sequence dodgeSequence = new Sequence();
-            //dodgeSequence.noeuds.Add(new NoeudsReloadIfEnemyBehind()); // Always success
-            dodgeSequence.noeuds.Add(new NoeudsDashIfProjectileClose(5.0f));
-
-            // is enemy, is bonus
-            Sequence moveToBonusSequence = new Sequence();
-            moveToBonusSequence.noeuds.Add(new NoeudsPredictAndLookAtEnemy(0.017f));
-            moveToBonusSequence.noeuds.Add(new NoeudsFireAtVisibleEnemy()); // Always true
-            moveToBonusSequence.noeuds.Add(new NoeudsDashToClosestBonus());
-            moveToBonusSequence.noeuds.Add(new NoeudsMoveToBonus());
-            
-            // is enemy, no bonus
-            Sequence moveToEnemySequence = new Sequence();
-            moveToEnemySequence.noeuds.Add(new NoeudsPredictAndLookAtEnemy(0.017f));
-            moveToEnemySequence.noeuds.Add(new NoeudsFireAtVisibleEnemy()); // Always true
-
-            Selector moveToBonusOrTarget = new Selector();
-            Sequence sq = new Sequence();
-            sq.noeuds.Add(new NoeudsAmmoHigherThan(4));
-            sq.noeuds.Add(new NoeudsMoveToClosestEnemy());
-            moveToBonusOrTarget.noeuds.Add(new NoeudsMoveToClosestBonusLastKnowPosition());
-
-            moveToEnemySequence.noeuds.Add(moveToBonusOrTarget);
-            //moveToEnemySequence.noeuds.Add(new NoeudsAmmoHigherThan(5));
-            //moveToEnemySequence.noeuds.Add(new NoeudsMoveToClosestEnemy());
-            //moveToEnemySequence.noeuds.Add(new NoeudsMoveToClosestBonusLastKnowPosition());
-
-            moveToBonusOrTarget.noeuds.Add(sq);
-            moveToBonusOrTarget.noeuds.Add(new NoeudsMoveToClosestBonusLastKnowPosition());
-
-
-            // no enemy
-            Sequence noEnemySequence = new Sequence();
-            noEnemySequence.noeuds.Add(new NoeudsReload());
-            noEnemySequence.noeuds.Add(new NoeudsMoveToBonus());
-            noEnemySequence.noeuds.Add(new NoeudsDashToClosestBonus());
-
-            // no bonus, no enemy
-            Sequence defaultSequence = new Sequence();
-            defaultSequence.noeuds.Add(new NoeudsStop());
-            
-            start.noeuds.Add(dodgeSequence);
-            start.noeuds.Add(moveToBonusSequence);
-            start.noeuds.Add(moveToEnemySequence);
-            start.noeuds.Add(noEnemySequence);
-            start.noeuds.Add(defaultSequence);*/
-
             behaviourTree = new BehaviourTree(startSequence, AIGameWorldUtils);
+            behaviourTree.alliedNames = new List<string> { "Narutode" }; // Noms alliés
         }
 
         public List<AIAction> ComputeAIDecision()
@@ -147,19 +105,20 @@ namespace AI_BehaviorTree_AIImplementation
 
             behaviourTree.AIId = AIId;
             behaviourTree.myPlayerInfos = myPlayerInfos;
-            behaviourTree.alliedNames = new List<string> { "Narutode" };
 
             behaviourTree.actions.Clear();
             behaviourTree.previousGameWorld = behaviourTree.gameWorld;
             behaviourTree.gameWorld = AIGameWorldUtils;
 
-            SetAllBonusPositions(behaviourTree, behaviourTree.gameWorld); // In theory should be executed only once
+            SetAllBonusPositions(behaviourTree, behaviourTree.gameWorld); // Vérifie et ajoute les bonus dans les po
             behaviourTree.closestBonus = GetClosestBonus(myPlayerInfos.Transform.Position, behaviourTree.gameWorld);
             behaviourTree.closestTarget = GetClosestTarget(myPlayerInfos.Transform.Position, behaviourTree.gameWorld, behaviourTree.alliedNames);
             behaviourTree.start.Execute(ref behaviourTree);
             return behaviourTree.actions;
         }
 
+        // Ajoute les bonus du gameWorld courant dans la liste des positions des bonus possibles
+        // Répertorie la position de tout les bonus
         private void SetAllBonusPositions(BehaviourTree bTree, GameWorldUtils gameWorld)
         {
             List<BonusInformations> bonusInfos = gameWorld.GetBonusInfosList();
@@ -172,6 +131,7 @@ namespace AI_BehaviorTree_AIImplementation
             }
         }
 
+        // Compute la position du bonus le plus proche si il en existe un
         private BonusInformations GetClosestBonus(Vector3 position, GameWorldUtils gameWorld)
         {
             List<BonusInformations> bonusInfos = gameWorld.GetBonusInfosList();
@@ -191,6 +151,8 @@ namespace AI_BehaviorTree_AIImplementation
             return closestBonus;
         }
 
+        // Compute la position du joueur le plus proche qui n'est pas un allié
+        // Les alliés sont ignorés dans le cas où il y a seulement 2 joueurs dans la partie
         private PlayerInformations GetClosestTarget(Vector3 position, GameWorldUtils gameWorld, List<string> alliedNames)
         {
             List<PlayerInformations> playerInfos = gameWorld.GetPlayerInfosList();
@@ -201,10 +163,9 @@ namespace AI_BehaviorTree_AIImplementation
             {
                 if (playerInfo.PlayerId != AIId && playerInfo.IsActive)
                 {
-                    // Ally mode
-                    if (playerInfos.Count > 2)
+                    if (playerInfos.Count > 2) // Au moins 3 joueurs
                     {
-                        if (!alliedNames.Contains(playerInfo.Name))
+                        if (!alliedNames.Contains(playerInfo.Name)) // Si ce n'est pas un allié
                         {
                             float distance = Vector3.Distance(position, playerInfo.Transform.Position);
                             if (distance < closestDistance)
@@ -214,7 +175,7 @@ namespace AI_BehaviorTree_AIImplementation
                             }
                         }
                     }
-                    else // FFA
+                    else // 1v1 : FFA (pas d'alliés)
                     {
                         float distance = Vector3.Distance(position, playerInfo.Transform.Position);
                         if (distance < closestDistance)
