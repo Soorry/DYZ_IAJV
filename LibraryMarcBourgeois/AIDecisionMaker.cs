@@ -37,7 +37,7 @@ namespace AI_BehaviorTree_AIImplementation
         {
             /// Le behaviour tree ci-dessous correspond à ElonMuskBehaviourTreeDiagramNonOptimized.png
             /// Pour une version factorisée voir ElonMuskBehaviourTreeDiagramOptimized.png
-            /// Les images sont situées à la source du dossier LibraryMarcBourgeois
+            /// Les images et les 2 dll d'Elon Musk sont situées à la source du dossier LibraryMarcBourgeois
             /// Note : Elon semble encore plus fort quand le temps est accéléré à x5 ou x10 sur des parties de plus longue durée
 
             Sequence startSequence = new Sequence();
@@ -110,7 +110,7 @@ namespace AI_BehaviorTree_AIImplementation
             behaviourTree.previousGameWorld = behaviourTree.gameWorld;
             behaviourTree.gameWorld = AIGameWorldUtils;
 
-            SetAllBonusPositions(behaviourTree, behaviourTree.gameWorld); // Vérifie et ajoute les bonus dans les po
+            SetAllBonusPositions(behaviourTree, behaviourTree.gameWorld);
             behaviourTree.closestBonus = GetClosestBonus(myPlayerInfos.Transform.Position, behaviourTree.gameWorld);
             behaviourTree.closestTarget = GetClosestTarget(myPlayerInfos.Transform.Position, behaviourTree.gameWorld, behaviourTree.alliedNames);
             behaviourTree.start.Execute(ref behaviourTree);
