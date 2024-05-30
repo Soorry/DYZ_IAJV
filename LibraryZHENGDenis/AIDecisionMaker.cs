@@ -37,37 +37,38 @@ namespace AI_BehaviorTree_AIImplementation
         {
             Selector start = new Selector();
 
-            // Sequence to handle escaping projectiles
+            //Custom noeuds
             LookAtPlayerClosest lookAtPlayerClosest = new LookAtPlayerClosest();
             NoeudFireWhenSeesPlayer noeudsFire = new NoeudFireWhenSeesPlayer();
             NoeudReloadIfNecessary noeudReload = new NoeudReloadIfNecessary();
-            MoveBonusClosest moveBonusClosest = new MoveBonusClosest();
             NoeudAlwaysFail alwaysFail = new NoeudAlwaysFail();
-            Sequence shootSequence = new Sequence();
-            EchapProjectileMove echapProjectileMove = new EchapProjectileMove();
 
+            MoveBonusClosest moveBonusClosest = new MoveBonusClosest();
+            EchapProjectileMove echapProjectileMove = new EchapProjectileMove();
+            MoveToPlayerClosest moveToPlayerClosest = new MoveToPlayerClosest();
+
+            Sequence shootSequence = new Sequence();
             shootSequence.noeuds.Add(lookAtPlayerClosest);
 
             Selector ShootOrReload = new Selector();
             ShootOrReload.noeuds.Add(noeudsFire);
             ShootOrReload.noeuds.Add(noeudReload);
+
             shootSequence.noeuds.Add(ShootOrReload);
             shootSequence.noeuds.Add(alwaysFail);
 
-            Sequence escapeSequence = new Sequence();
-            escapeSequence.noeuds.Add(moveBonusClosest);
-
             Sequence bonusSequence = new Sequence();
-            
-            bonusSequence.noeuds.Add(echapProjectileMove);
+            bonusSequence.noeuds.Add(moveBonusClosest);
+
+            Sequence escapeSequence = new Sequence();
+            escapeSequence.noeuds.Add(echapProjectileMove);
            
             Sequence moveToPlayerSequence = new Sequence();
-            MoveToPlayerClosest moveToPlayerClosest = new MoveToPlayerClosest();
             moveToPlayerSequence.noeuds.Add(moveToPlayerClosest);
 
             start.noeuds.Add(shootSequence);
-            start.noeuds.Add(escapeSequence);  
-            start.noeuds.Add(bonusSequence);
+            start.noeuds.Add(bonusSequence);  
+            start.noeuds.Add(escapeSequence);
             start.noeuds.Add(moveToPlayerSequence);
             List<string> Allies = new List<string> { "Elon Musk"};
             behaviourTree = new BehaviourTree(start, AIGameWorldUtils);
