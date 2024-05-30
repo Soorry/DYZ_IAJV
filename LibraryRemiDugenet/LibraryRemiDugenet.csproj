@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LibraryRemiDugenet</RootNamespace>
-    <AssemblyName>AI_BehaviorTree_AIImplementation_3</AssemblyName>
+    <AssemblyName>AI_BehaviorTree_AIImplementation_1</AssemblyName>
     <DefaultLanguage>fr-FR</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
@@ -138,7 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AI_BehaviorTree_AIGameUtility">
-      <HintPath>..\..\RedLock-master\Red Lock_Data\Managed\AI_BehaviorTree_AIGameUtility.dll</HintPath>
+      <HintPath>..\..\..\RedLock-master\Red Lock_Data\Managed\AI_BehaviorTree_AIGameUtility.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\..\..\Program Files\Unity\Hub\Editor\2022.3.30f1\Editor\Data\Managed\UnityEngine.dll</HintPath>

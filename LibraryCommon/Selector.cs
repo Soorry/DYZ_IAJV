@@ -19,11 +19,11 @@ namespace LibraryCommon
             etat = EtatNoeud.NotExecuted;
         }
 
-        public void Add()
+        public void Add(INoeud noeud)
         {
-            // todo
+            noeuds.Add(noeud);
         }
-        
+
         public EtatNoeud Execute(ref BehaviourTree bTree)
         {
             foreach (var n in noeuds)

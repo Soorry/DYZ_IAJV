@@ -52,4 +52,16 @@ namespace LibraryCommon
             return EtatNoeud.Success;
         }
     }
+
+    public class NoeudsReload : INoeud
+    {
+        public EtatNoeud Execute(ref BehaviourTree bTree)
+        {
+            if (bTree.myPlayerInfos.SalvoRemainingAmount < 10)
+            {
+                bTree.actions.Add(new AIActionReload());
+            }
+            return EtatNoeud.Success;
+        }
+    }
 }
