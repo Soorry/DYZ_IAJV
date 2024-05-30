@@ -5,12 +5,11 @@ using LibraryCommon;
 
 namespace LibraryMarcBourgeois
 {
-
-    public class NoeudsAnticipateAndLookAtEnemy : INoeud
+    public class NoeudsPredictAndLookAtEnemy : INoeud
     {
-        private float anticipationFactor = 0.005f; //
+        private float anticipationFactor; //
 
-        public NoeudsAnticipateAndLookAtEnemy(float f)
+        public NoeudsPredictAndLookAtEnemy(float f = 0.01f)
         {
             anticipationFactor = f;
         }
@@ -19,27 +18,14 @@ namespace LibraryMarcBourgeois
         {
             List<PlayerInformations> playerInfos = bTree.gameWorld.GetPlayerInfosList();
             List<PlayerInformations> previousPlayerInfos = bTree.previousGameWorld.GetPlayerInfosList();
-
-            PlayerInformations closestEnemy = null;
+            
+            PlayerInformations closestEnemy = bTree.closestTarget;
             PlayerInformations previousClosestEnemy = null;
-            float closestDistance = float.MaxValue;
-
-            foreach (var playerInfo in playerInfos)
-            {
-                if (playerInfo.PlayerId != bTree.myPlayerInfos.PlayerId && playerInfo.IsActive)
-                {
-                    float distance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position, playerInfo.Transform.Position);
-                    if (distance < closestDistance)
-                    {
-                        closestDistance = distance;
-                        closestEnemy = playerInfo;
-                    }
-                }
-            }
 
             if (closestEnemy != null)
             {
-                foreach (var prevPlayerInfo in previousPlayerInfos)
+                // Get previous position of current closest enemy
+                foreach (PlayerInformations prevPlayerInfo in previousPlayerInfos)
                 {
                     if (prevPlayerInfo.PlayerId == closestEnemy.PlayerId)
                     {
@@ -65,38 +51,31 @@ namespace LibraryMarcBourgeois
                 }
             }
 
+            // Always success
+            return EtatNoeud.Success;
+        }
+    }
+
+    public class NoeudsIsTarget : INoeud
+    {
+        EtatNoeud INoeud.Execute(ref BehaviourTree bTree)
+        {
+            if (bTree.closestTarget != null)
+            {
+                return EtatNoeud.Success;
+            }
             return EtatNoeud.Fail;
         }
     }
 
-    public class NoeudsLookAtClosestEnemy : INoeud
+    public class NoeudsIsBonus : INoeud
     {
         EtatNoeud INoeud.Execute(ref BehaviourTree bTree)
         {
-            List<PlayerInformations> playerInfos = bTree.gameWorld.GetPlayerInfosList();
-
-            PlayerInformations closestEnemy = null;
-            float closestDistance = float.MaxValue;
-
-            foreach (var playerInfo in playerInfos)
+            if (bTree.closestBonus != null)
             {
-                if (playerInfo.PlayerId != bTree.myPlayerInfos.PlayerId && playerInfo.IsActive)
-                {
-                    float distance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position, playerInfo.Transform.Position);
-                    if (distance < closestDistance)
-                    {
-                        closestDistance = distance;
-                        closestEnemy = playerInfo;
-                    }
-                }
-            }
-
-            if (closestEnemy != null)
-            {
-                bTree.actions.Add(new AIActionLookAtPosition(closestEnemy.Transform.Position));
                 return EtatNoeud.Success;
             }
-
             return EtatNoeud.Fail;
         }
     }
@@ -105,27 +84,9 @@ namespace LibraryMarcBourgeois
     {
         EtatNoeud INoeud.Execute(ref BehaviourTree bTree)
         {
-            List<PlayerInformations> playerInfos = bTree.gameWorld.GetPlayerInfosList();
-
-            PlayerInformations closestEnemy = null;
-            float closestDistance = float.MaxValue;
-
-            foreach (var playerInfo in playerInfos)
+            if (bTree.closestTarget != null)
             {
-                if (playerInfo.PlayerId != bTree.myPlayerInfos.PlayerId && playerInfo.IsActive)
-                {
-                    float distance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position, playerInfo.Transform.Position);
-                    if (distance < closestDistance)
-                    {
-                        closestDistance = distance;
-                        closestEnemy = playerInfo;
-                    }
-                }
-            }
-
-            if (closestEnemy != null)
-            {
-                bTree.actions.Add(new AIActionMoveToDestination(closestEnemy.Transform.Position));
+                bTree.actions.Add(new AIActionMoveToDestination(bTree.closestTarget.Transform.Position));
                 return EtatNoeud.Success;
             }
 
@@ -138,7 +99,7 @@ namespace LibraryMarcBourgeois
         private float distanceThreshold;
         private bool checkInside; // false : out, true : in
 
-        public NoeudsCheckDistance(float d, bool inside=true)
+        public NoeudsCheckDistance(float d, bool inside = true)
         {
             distanceThreshold = d;
             checkInside = inside;
@@ -146,13 +107,11 @@ namespace LibraryMarcBourgeois
 
         EtatNoeud INoeud.Execute(ref BehaviourTree bTree)
         {
-            PlayerInformations closestEnemy = GetClosestEnemy(bTree.myPlayerInfos, bTree.gameWorld.GetPlayerInfosList());
-
-            if(checkInside)
+            if (checkInside)
             {
-                if (closestEnemy != null)
+                if (bTree.closestTarget != null)
                 {
-                    float distance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position, closestEnemy.Transform.Position);
+                    float distance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position,  bTree.closestTarget.Transform.Position);
                     return distance <= distanceThreshold ? EtatNoeud.Fail : EtatNoeud.Success;
                 }
 
@@ -160,35 +119,14 @@ namespace LibraryMarcBourgeois
             }
             else
             {
-                if (closestEnemy != null)
+                if (bTree.closestTarget != null)
                 {
-                    float distance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position, closestEnemy.Transform.Position);
+                    float distance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position, bTree.closestTarget.Transform.Position);
                     return distance <= distanceThreshold ? EtatNoeud.Success : EtatNoeud.Fail;
                 }
 
                 return EtatNoeud.Success;
             }
-        }
-
-        private PlayerInformations GetClosestEnemy(PlayerInformations myPlayerInfos, List<PlayerInformations> playerInfosList)
-        {
-            PlayerInformations closestEnemy = null;
-            float closestDistance = float.MaxValue;
-
-            foreach (var playerInfo in playerInfosList)
-            {
-                if (playerInfo.PlayerId != myPlayerInfos.PlayerId && playerInfo.IsActive)
-                {
-                    float distance = Vector3.Distance(myPlayerInfos.Transform.Position, playerInfo.Transform.Position);
-                    if (distance < closestDistance)
-                    {
-                        closestDistance = distance;
-                        closestEnemy = playerInfo;
-                    }
-                }
-            }
-
-            return closestEnemy;
         }
     }
 
@@ -196,47 +134,72 @@ namespace LibraryMarcBourgeois
     {
         EtatNoeud INoeud.Execute(ref BehaviourTree bTree)
         {
-            List<BonusInformations> bonusInfos = bTree.gameWorld.GetBonusInfosList();
-            BonusInformations closestBonus = null;
-            float closestDistance = float.MaxValue;
-
-            foreach (var bonusInfo in bonusInfos)
+            if (bTree.closestBonus != null)
             {
-                float distance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position, bonusInfo.Position);
-                if (distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    closestBonus = bonusInfo;
-                }
-            }
-
-            if (closestBonus != null)
-            {
-                bTree.position = closestBonus.Position;
-                NoeudsMoveTo move = new NoeudsMoveTo();
-                return move.Execute(ref bTree);
+                bTree.actions.Add(new AIActionMoveToDestination(bTree.closestBonus.Position));
+                return EtatNoeud.Success;
             }
 
             return EtatNoeud.Fail;
         }
     }
 
+    public class NoeudsDashToClosestBonus : INoeud
+    {
+        EtatNoeud INoeud.Execute(ref BehaviourTree bTree)
+        {
+            if(bTree.closestBonus != null)
+            {
+                Vector3 direction = (bTree.closestBonus.Position - bTree.myPlayerInfos.Transform.Position).normalized;
+                bTree.actions.Add(new AIActionDash(direction));
+                return EtatNoeud.Success;
+            }
+
+            return EtatNoeud.Fail;
+        }
+    }
+
+    public class NoeudsMoveToClosestBonusLastKnownPosition : INoeud
+    {
+        public EtatNoeud Execute(ref BehaviourTree bTree)
+        {
+            if (bTree.bonusPositions.Count == 0)
+            {
+                return EtatNoeud.Fail;
+            }
+
+            Vector3 closestBonusPosition = Vector3.zero;
+            float closestDistance = float.MaxValue;
+
+            foreach(Vector3 bonusPosition in bTree.bonusPositions)
+            {
+                float distance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position, bonusPosition);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestBonusPosition = bonusPosition;
+                }
+            }
+
+            bTree.actions.Add(new AIActionMoveToDestination(closestBonusPosition));
+            return EtatNoeud.Success;
+        }
+    }
+
     public class NoeudsDashIfProjectileClose : INoeud
     {
-        private float _dangerDistance;
-        private float _dashDistance;
+        private float dangerDistance;
 
-        public NoeudsDashIfProjectileClose(float dangerDistance, float dashDistance)
+        public NoeudsDashIfProjectileClose(float dangerDistance)
         {
-            _dangerDistance = dangerDistance;
-            _dashDistance = dashDistance;
+            this.dangerDistance = dangerDistance;
         }
 
         EtatNoeud INoeud.Execute(ref BehaviourTree bTree)
         {
             List<ProjectileInformations> projectileInfos = bTree.gameWorld.GetProjectileInfosList();
             List<BonusInformations> bonusInfos = bTree.gameWorld.GetBonusInfosList();
-            Vector3 aiPosition = bTree.myPlayerInfos.Transform.Position;
+            Vector3 myPosition = bTree.myPlayerInfos.Transform.Position;
 
             ProjectileInformations closestProjectile = null;
             float closestDistance = float.MaxValue;
@@ -246,7 +209,7 @@ namespace LibraryMarcBourgeois
             {
                 if (projectileInfo.PlayerId != bTree.myPlayerInfos.PlayerId)
                 {
-                    float distance = Vector3.Distance(aiPosition, projectileInfo.Transform.Position);
+                    float distance = Vector3.Distance(myPosition, projectileInfo.Transform.Position);
                     if (distance < closestDistance)
                     {
                         closestDistance = distance;
@@ -255,39 +218,158 @@ namespace LibraryMarcBourgeois
                 }
             }
 
-            if (closestProjectile != null && closestDistance <= _dangerDistance)
+            if (closestProjectile != null && closestDistance <= dangerDistance)
             {
-                // Calculate perpendicular dash direction
-                Vector3 projectileDirection = (closestProjectile.Transform.Position - aiPosition).normalized;
-                Vector3 dashDirection = Vector3.Cross(projectileDirection, Vector3.up).normalized;
+                Vector3 projectileDirection = (closestProjectile.Transform.Position - myPosition).normalized;
+                Vector3 dashDirection = Vector3.Cross(projectileDirection, Vector3.up).normalized; // Perpendiculaire
 
-                // Find the closest bonus in the dash direction
+                float wallMaxDistance = 5;
+                RaycastHit hit;
+                if (Physics.Raycast(bTree.myPlayerInfos.Transform.Position, dashDirection.normalized, out hit, wallMaxDistance))
+                {
+                    // Wall
+                    if (hit.collider.gameObject.layer != bTree.gameWorld.PlayerLayerMask &&
+                        hit.collider.gameObject.layer != bTree.gameWorld.ProjectileLayerMask &&
+                        hit.collider.gameObject.layer != bTree.gameWorld.BonusLayerMask)
+                    {
+                        dashDirection = -dashDirection;
+                    }
+                }
+
                 BonusInformations closestBonus = null;
                 float closestBonusDistance = float.MaxValue;
 
-                foreach (var bonusInfo in bonusInfos)
+                foreach (BonusInformations bonusInfo in bonusInfos)
                 {
-                    float distance = Vector3.Distance(aiPosition, bonusInfo.Position);
-                    Vector3 bonusDirection = (bonusInfo.Position - aiPosition).normalized;
+                    float bonusDistance = Vector3.Distance(myPosition, bonusInfo.Position);
+                    Vector3 bonusDirection = (bonusInfo.Position - myPosition).normalized;
 
-                    if (Vector3.Dot(bonusDirection, dashDirection) > 0.5f && distance < closestBonusDistance)
+                    // Dirige vers le bonus si l'angle par rapport à la perpendiculaire n'est pas trop obtu
+                    if (Vector3.Dot(bonusDirection, dashDirection) > 0.5f && bonusDistance < closestBonusDistance)
                     {
-                        closestBonusDistance = distance;
+                        closestBonusDistance = bonusDistance;
                         closestBonus = bonusInfo;
                     }
                 }
 
                 if (closestBonus != null)
                 {
-                    dashDirection = (closestBonus.Position - aiPosition).normalized;
+                    dashDirection = (closestBonus.Position - myPosition).normalized;
                 }
 
-                //Vector3 dashPosition = aiPosition + dashDirection * _dashDistance;
-                bTree.actions.Add(new AIActionDash(dashDirection * _dashDistance));
+                bTree.actions.Add(new AIActionDash(dashDirection));
                 return EtatNoeud.Success;
             }
 
+            // Always success
+            return EtatNoeud.Success;
+            //return EtatNoeud.Fail;
+        }
+    }
+
+    public class NoeudsFireAtVisibleEnemy : INoeud
+    {
+        public EtatNoeud Execute(ref BehaviourTree bTree)
+        {
+            if (bTree.closestTarget != null)
+            {
+                if(IsEnemyInFieldOfView(bTree.myPlayerInfos, bTree.closestTarget))
+                {
+                    bTree.actions.Add(new AIActionFire()); // Fire at target
+                    return EtatNoeud.Success;
+                }
+                /*Vector3 directionToEnemy = closestEnemy.Transform.Position - bTree.myPlayerInfos.Transform.Position;
+                RaycastHit hit;
+                if (Physics.Raycast(bTree.myPlayerInfos.Transform.Position, directionToEnemy, out hit, 500f))
+                {
+                    float hitDistance = Vector3.Distance(bTree.myPlayerInfos.Transform.Position, hit.point);
+                    // Wall behind target
+                    if (hit.collider.gameObject.layer == bTree.gameWorld.PlayerLayerMask || hitDistance+1 > closestDistance)
+                    {
+                        bTree.actions.Add(new AIActionFire()); // Fire at target
+                    }
+                }*/
+            }
+
+            // Always Success
+            return EtatNoeud.Success;
+        }
+
+        private bool IsEnemyInFieldOfView(PlayerInformations myPlayerInfos, PlayerInformations enemy)
+        {
+            Vector3 directionToEnemy = (enemy.Transform.Position - myPlayerInfos.Transform.Position).normalized;
+            float angle = Vector3.Angle(myPlayerInfos.Transform.Rotation * Vector3.forward, directionToEnemy);
+
+            float fieldOfView = 30f;
+
+            return angle <= fieldOfView / 2f;
+        }
+    }
+
+    public class NoeudsAmmoLessThan : INoeud
+    {
+        private float count;
+
+        public NoeudsAmmoLessThan(float ammoCount)
+        {
+            this.count = ammoCount;
+        }
+
+        public EtatNoeud Execute(ref BehaviourTree bTree)
+        {
+            if(bTree.myPlayerInfos.SalvoRemainingAmount < count)
+            {
+                return EtatNoeud.Success;
+            }
             return EtatNoeud.Fail;
+        }
+    }
+
+    public class NoeudsAmmoHigherThan : INoeud
+    {
+        private float count;
+
+        public NoeudsAmmoHigherThan(float ammoCount)
+        {
+            this.count = ammoCount;
+        }
+
+        public EtatNoeud Execute(ref BehaviourTree bTree)
+        {
+            if (bTree.myPlayerInfos.SalvoRemainingAmount > count)
+            {
+                return EtatNoeud.Success;
+            }
+            return EtatNoeud.Fail;
+        }
+    }
+
+    public class NoeudsReloadIfEnemyBehind : INoeud
+    {
+        public EtatNoeud Execute(ref BehaviourTree bTree)
+        {
+            if (bTree.closestTarget != null && IsEnemyBehind(bTree.myPlayerInfos, bTree.closestTarget))
+            {
+                bTree.actions.Add(new AIActionReload());
+                return EtatNoeud.Success;
+            }
+
+            // Always true
+            return EtatNoeud.Success;
+            //return EtatNoeud.Fail;
+        }
+
+        private bool IsEnemyBehind(PlayerInformations myPlayerInfos, PlayerInformations enemy)
+        {
+            Vector3 directionToEnemy = (enemy.Transform.Position - myPlayerInfos.Transform.Position).normalized;
+            Vector3 oppositeDirection = -(myPlayerInfos.Transform.Rotation * Vector3.forward); // Direction opposée
+
+            float angle = Vector3.Angle(oppositeDirection, directionToEnemy);
+
+            // Assuming an angle of 180 degrees for the "behind" check
+            float fieldOfView = 180f;
+
+            return angle <= fieldOfView / 2f;
         }
     }
 }

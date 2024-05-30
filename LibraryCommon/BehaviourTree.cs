@@ -11,16 +11,19 @@ namespace LibraryCommon
         public GameWorldUtils gameWorld;
         public int AIId;
 
-        public Selector start;
+        public INoeud start;
         public List<AIAction> actions;
         public Vector3 position;
         public PlayerInformations myPlayerInfos;
         public List<string> alliedNames;
+        public PlayerInformations closestTarget; // Enemy computed at each tick
+        public BonusInformations closestBonus; // Bonus computed at each tick
+        public List<Vector3> bonusPositions = new List<Vector3>(); // Known bonus positions
 
         public PlayerInformations myplayerInformations; // deprecated (use myPlayerInfos)
         public List<Vector3> PrevPlayersPos = new List<Vector3>(); // deprecated (use previousGameWorld.GetPlayerInfosList())
 
-        public BehaviourTree(Selector first, GameWorldUtils gw)
+        public BehaviourTree(INoeud first, GameWorldUtils gw)
         {
             start = first;
             actions = new List<AIAction>();

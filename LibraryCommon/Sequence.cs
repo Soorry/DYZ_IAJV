@@ -14,9 +14,9 @@ namespace LibraryCommon
             noeuds = new List<INoeud>();
         }
 
-        public void Add()
+        public void Add(INoeud noeud)
         {
-            // todo
+            noeuds.Add(noeud);
         }
 
         public EtatNoeud Execute(ref BehaviourTree bTree)
