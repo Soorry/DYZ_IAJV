@@ -41,6 +41,7 @@ namespace AI_BehaviorTree_AIImplementation
             LookAtPlayerClosest lookAtPlayerClosest = new LookAtPlayerClosest();
             NoeudFireWhenSeesPlayer noeudsFire = new NoeudFireWhenSeesPlayer();
             NoeudReloadIfNecessary noeudReload = new NoeudReloadIfNecessary();
+            MoveBonusClosest moveBonusClosest = new MoveBonusClosest();
             NoeudAlwaysFail alwaysFail = new NoeudAlwaysFail();
             Sequence shootSequence = new Sequence();
             EchapProjectileMove echapProjectileMove = new EchapProjectileMove();
@@ -54,11 +55,11 @@ namespace AI_BehaviorTree_AIImplementation
             shootSequence.noeuds.Add(alwaysFail);
 
             Sequence escapeSequence = new Sequence();
-            escapeSequence.noeuds.Add(echapProjectileMove);
+            escapeSequence.noeuds.Add(moveBonusClosest);
 
             Sequence bonusSequence = new Sequence();
-            MoveBonusClosest moveBonusClosest = new MoveBonusClosest();
-            bonusSequence.noeuds.Add(moveBonusClosest);
+            
+            bonusSequence.noeuds.Add(echapProjectileMove);
            
             Sequence moveToPlayerSequence = new Sequence();
             MoveToPlayerClosest moveToPlayerClosest = new MoveToPlayerClosest();
